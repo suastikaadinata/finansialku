@@ -44,6 +44,7 @@ const [showPassword, setShowPassword] = useState(false);
                 borderRadius: 8,
                 paddingHorizontal: 8
             }}
+            inputStyle={{ fontFamily: "Poppins-Regular" }}
             containerStyle={{ paddingHorizontal: 0 }}
             rightIcon={
                 <Icon

@@ -7,5 +7,5 @@ import React, { ComponentProps } from 'react';
 import { Icon, Button } from '@rneui/themed';
 
 export default function CustomButton({ ...props }: ComponentProps<typeof Button>){
-    return <Button buttonStyle={{ borderRadius: 8 }} size='lg' {...props} />
+    return <Button buttonStyle={{ borderRadius: 8 }} titleStyle={{ fontFamily: "Poppins-Regular" }} size='lg' {...props} />
 }

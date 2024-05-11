@@ -8,7 +8,7 @@ import { FlexAlignType, StyleProp, View, ViewStyle } from "react-native";
 
 export type StackDirection ="row" | "column" | "row-reverse" | "column-reverse"
 interface Props {
-  children: React.ReactNode[] | React.ReactNode;
+  children?: React.ReactNode[] | React.ReactNode;
   spacing?: number;
   direction?: StackDirection;
   style?: StyleProp<ViewStyle>;

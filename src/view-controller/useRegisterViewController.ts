@@ -7,8 +7,11 @@ import React from "react"
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import userViewModel from "../view-model/userViewModel";
 
 export default function useRegisterViewController() {
+    const { doCreateUser } = userViewModel();
+
     const schema = yup.object({
 		username: yup.string().required().label("Username"),
         fullname: yup.string().required().label("Fullname"),
@@ -31,6 +34,10 @@ export default function useRegisterViewController() {
 		defaultValues,
 		resolver: yupResolver(schema),
 	});
+
+    const doRegister = async(data: any, onSuccess: () => void, onError: (e: string) => void) => {
+        await doCreateUser(data, onSuccess, onError);
+    }
 
     return{
         method    

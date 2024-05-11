@@ -47,6 +47,9 @@ export default function RegisterScreen({ navigation }: NavigateProps){
                             <RHFTextField 
                                 name='birthdate'
                                 title='Birthdate'
+                                disabled
+                                isClickable
+                                onPress={() => { console.log('Pressed') }}
                                 required
                                 placeholder='Enter your birthdate'
                             />

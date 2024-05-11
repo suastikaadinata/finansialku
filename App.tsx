@@ -24,7 +24,7 @@ const theme = createTheme({
     primary:  colors.primary.main,
     secondary: colors.secondary.main,
   },
-  mode: 'light',
+  mode: 'light'
 });
 
 function App() {

@@ -9,16 +9,14 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Stack from "../components/Stack";
 import Typography from "../components/Typography";
 import { colors, transparent } from "../styles/colors";
+import { View } from "react-native";
+import TransactionView from "./TransactionView";
+import HomeView from "./HomeView";
+import AccountView from "./AccountView";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainView(){
-    const Feed = () => (
-        <Stack>
-            <Typography>Feed</Typography>
-        </Stack>
-    )
-
     return (
         <Tab.Navigator
           initialRouteName="Home"
@@ -29,30 +27,19 @@ export default function MainView(){
           }}
         >
           <Tab.Screen
-            name="Income"
-            component={Feed}
+            name="Transaction"
+            component={TransactionView}
             options={{
-              tabBarLabel: 'Income',
+              tabBarLabel: 'Transaction',
               tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
               tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="cash-plus" color={color} size={28} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Outcome"
-            component={Feed}
-            options={{
-              tabBarLabel: 'Outcome',
-              tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="credit-card-minus" color={color} size={28} />
+                <MaterialCommunityIcons name="chart-arc" color={color} size={28} />
               ),
             }}
           />
           <Tab.Screen
             name="Home"
-            component={Feed}
+            component={HomeView}
             options={{
               tabBarLabel: 'Home',
               tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
@@ -91,19 +78,8 @@ export default function MainView(){
             }}
           />
           <Tab.Screen
-            name="Insight"
-            component={Feed}
-            options={{
-              tabBarLabel: 'Insight',
-              tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="chart-box-plus-outline" color={color} size={28} />
-              ),
-            }}
-          />
-          <Tab.Screen
             name="Account"
-            component={Feed}
+            component={AccountView}
             options={{
               tabBarLabel: 'Account',
               tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },

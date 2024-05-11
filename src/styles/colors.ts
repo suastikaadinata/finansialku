@@ -284,16 +284,16 @@ export const white = "#ffffff";
 
 const colors = {
   primary: {
-    main: "#FA4A0C",
-    surface: "#E3FFEF",
+    main: "#03AED2",
+    surface: "#68D2E8",
     border: "#BFF8D7",
     hover: "#129D4C",
     pressed: "#135C32",
     focus: "#06AB4B4D",
   },
   secondary: {
-    main: "#EEA907",
-    surface: "#E1F3FF",
+    main: "#FDDE55",
+    surface: "#FEEFAD",
     border: "#B4C9FB",
     hover: "#1C7EC2",
     pressed: "#0E66A4",

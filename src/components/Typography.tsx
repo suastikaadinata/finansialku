@@ -14,5 +14,5 @@ interface Props{
 }
 
 export default function Typography({ children, viewStyle, textStyle }: Props) {
-  return <Text style={[{ fontFamily: "Roboto-Regular", fontSize: 14, fontWeight: "normal", color: colors.neutral.neutral_90 }, viewStyle, textStyle ]}>{children}</Text>;
+  return <Text style={[{ fontFamily: "Poppins-Regular", fontSize: 14, fontWeight: "normal", color: colors.neutral.neutral_90 }, viewStyle, textStyle ]}>{children}</Text>;
 }
