@@ -3,7 +3,7 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React from "react";
+import React, { memo } from "react";
 import Page from "../components/Page";
 import { colors } from "../styles/colors";
 import { FlatList, ScrollView, TouchableOpacity } from "react-native";
@@ -13,6 +13,7 @@ import { Divider, IconButton, Surface } from "react-native-paper";
 import useTransactionViewController from "../view-controller/useTransactionViewController";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { PieChart } from "react-native-gifted-charts";
+import { useTranslation } from "react-i18next";
 
 interface Props{
     isSelected?: boolean;
@@ -24,13 +25,14 @@ interface Props{
 }
 
 export default function TransactionView(){
+    const { t } = useTranslation();
     const { selectedType, onSelectedType, pieData } = useTransactionViewController();
 
     const HeaderView = () => {
         return(
             <Stack direction="row" p={16}>
                 <Typography textStyle={{ flex: 1, fontWeight: 700, color: colors.neutral.neutral_90, fontSize: 22 }} viewStyle={{ alignSelf: 'center' }}>
-                    Transaction
+                    {t('title.transaction')}
                 </Typography>
                 <Stack ml={4} mr={4}>
                     <IconButton 
@@ -73,8 +75,8 @@ export default function TransactionView(){
     const IncomeSpendingTypeView = () => {
         return(
             <Surface style={{ flexDirection: 'row', marginTop: 8, marginHorizontal: 16, backgroundColor: colors.neutral.neutral_10, borderRadius: 25, height: 50 }}>
-                <TypeView isSelected={selectedType == 'income'} title="Income" onPress={() => onSelectedType('income')}/>
-                <TypeView isSelected={selectedType == 'spending'} title="Spending" onPress={() => onSelectedType('spending')}/>
+                <TypeView isSelected={selectedType == 'income'} title={t('title.income')} onPress={() => onSelectedType('income')}/>
+                <TypeView isSelected={selectedType == 'spending'} title={t('title.spending')} onPress={() => onSelectedType('spending')}/>
             </Surface>
         )
     }
@@ -97,7 +99,7 @@ export default function TransactionView(){
                 backgroundColor: colors.neutral.neutral_10,
                 borderRadius: 8
              }}>
-                <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>Monthly Summary</Typography>
+                <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('monthly_summary')}</Typography>
                 <Stack mt={16} direction="row">
                     <Stack mr={8} style={{ flex: 1, alignItems: 'center' }}>
                         <PieChart
@@ -118,14 +120,14 @@ export default function TransactionView(){
                     </Stack>
                 </Stack>
                 <Stack direction="row" mt={24} style={{ justifyContent: 'space-between' }}>
-                    <Typography textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90, alignSelf: 'flex-end' }}>Total Spending a Month:</Typography>
+                    <Typography textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90, alignSelf: 'flex-end' }}>{t('total_spending_a_month')}:</Typography>
                     <Typography textStyle={{ fontSize: 20, fontWeight: 700, color: colors.danger.main }}>Rp. 300.000</Typography>
                 </Stack>
             </Surface>
         )
     }
 
-    const TransactionItemView = ({ isIncome, isLast }: Props) => {
+    const TransactionItemView = memo(({ isIncome, isLast }: Props) => {
         return(
             <Stack mb={12}>
                 <Stack direction="row">
@@ -141,13 +143,13 @@ export default function TransactionView(){
                 { isLast ? null : <Divider style={{ marginTop: 12 }}/> }
             </Stack>
         )
-    }
+    })
 
     const LatestTransactionView = () => {
         return(
             <Surface elevation={4} style={{ flex: 1, marginTop: 24, backgroundColor: colors.neutral.neutral_10, padding: 16 }}>
                 <Typography textStyle={{ color: colors.neutral.neutral_90, fontWeight: 700, fontSize: 16 }}>
-                    Latest Transactions
+                    {t('latest_transaction')}
                 </Typography>
                 <FlatList 
                     data={[1, 2, 3, 4, 5]}

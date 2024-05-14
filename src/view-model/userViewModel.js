@@ -27,19 +27,23 @@ export default function userViewModel(){
 
     const doCreateUser = async (data, onSuccess, onError) => { 
         const user = await findingUser(data.username)
-        if(!user){
+        console.log('user', user)
+        if(!user || user.length === 0){
             const hashPassword = await doHashPassword(data.password)
-            await database.get('users').create(user => {
-                user.fullname = data.fullname
-                user.birthdate = data.birthdate
-                user.gender = data.gender
-                user.username = data.username
-                user.password = hashPassword
-                user.created_at = moment()
-            }).then((newUser) => {
-                onSuccess(newUser)
-            }).catch((error) => {
-                console.log(error)
+            await database.write(async() => {
+                await database.get('users').create(user => {
+                    user.fullname = data.fullname
+                    user.birthdate = data.birthdate
+                    user.gender = data.gender
+                    user.username = data.username
+                    user.password = hashPassword
+                    user.created_at = moment().unix()
+                }).then((newUser) => {
+                    console.log('new user', newUser)
+                    onSuccess(newUser)
+                }).catch((error) => {
+                    console.log(error)
+                })
             })
         }else{
             onError("Username already exist")
@@ -53,7 +57,7 @@ export default function userViewModel(){
 
     const doLogin = async (username, password, onSuccess, onError) => {
         const user = await findingUser(username)
-        if(user){
+        if(user && user.length > 0){
             deComparePassword(password, user.password).then((res) => {
                 if(res){
                     onSuccess(user)

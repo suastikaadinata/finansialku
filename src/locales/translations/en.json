@@ -1,0 +1,49 @@
+{
+    "title": {
+        "sign_in_with_your_account": "Sign in with your account",
+        "sign_up_your_account": "Sign up your account",
+        "sign_up": "Sign up",
+        "sign_in": "Sign in",
+        "username": "Username",
+        "password": "Password",
+        "fullname": "Fullname",
+        "birthdate": "Birthdate",
+        "gender": "Gender",
+        "password_confirmation": "Password confirmation",
+        "home": "Home",
+        "transaction": "Transaction",
+        "account": "Account",
+        "income": "Income",
+        "spending": "Spending",
+        "account_information": "Account Information",
+        "account_security": "Account Security",
+        "account_setting": "Account Setting",
+        "language": "Language",
+        "logout": "Logout"
+    },
+    "description": {
+        "account_security": "Change your password",
+        "language": "Set your account language"
+    },
+    "placeholder": {
+        "username": "Enter your username",
+        "password": "Enter your password",
+        "fullname": "Enter your fullname",
+        "birthdate": "Select your birthdate",
+        "gender": "Select your gender",
+        "password_confirmation": "Enter your password confirmation"
+    },
+    "forgot_password": "Forgot password?",
+    "tap_here": "Tap here.",
+    "your_balance_this_month_is": "Your balance this month is",
+    "your_monthly_budget": "Your Monthly Budget",
+    "spend_minus_total": "{{spend}} spend of total {{total}}",
+    "latest_transaction": "Latest Transaction",
+    "monthly_summary": "Monthly Summary",
+    "total_spending_a_month": "Total Spending a Month",
+    "total_income_a_month": "Total Income a Month",
+    "male": "Male",
+    "female": "Female",
+    "version": "Version",
+    "select_gender": "Select Gender"
+}

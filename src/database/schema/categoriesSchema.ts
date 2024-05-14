@@ -10,6 +10,6 @@ export const categorieschema = tableSchema({
     columns: [
         { name: 'user_id', type: 'string', isIndexed: true },
         { name: 'name', type: 'string' },
-        { name: 'created_at', type: 'string'},
+        { name: 'created_at', type: 'number'},
     ]
 })

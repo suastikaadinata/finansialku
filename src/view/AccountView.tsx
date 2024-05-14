@@ -13,6 +13,7 @@ import { Icon } from "@rneui/themed";
 import Typography from '../components/Typography';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Tile } from '@rneui/base';
+import { useTranslation } from 'react-i18next';
 
 interface Props{
     icon?: string;
@@ -21,10 +22,12 @@ interface Props{
 }
 
 export default function AccountView(){
+    const { t } = useTranslation();
+
     const AccountInformationView = () => {
         return(
             <Surface elevation={4} style={{ borderRadius: 8, marginTop: 36, marginHorizontal: 16, padding: 16, backgroundColor: colors.neutral.neutral_10 }}>
-                <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>Account Information</Typography>
+                <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('account_information')}</Typography>
                 <Stack mt={12} direction='row'>
                     <Stack style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <Icon type="fontawesome" name="account-circle" size={44} color={colors.neutral.neutral_90} />
@@ -39,7 +42,7 @@ export default function AccountView(){
                             </Stack>
                             <Stack ml={8} direction='row'>
                                 <MaterialCommunityIcons name="gender-male" size={16} color={colors.info.main} />
-                                <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_90 }} viewStyle={{ marginLeft: 4, alignSelf: 'center' }}>Male</Typography>
+                                <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_90 }} viewStyle={{ marginLeft: 4, alignSelf: 'center' }}>{t('male')}</Typography>
                             </Stack>
                         </Stack>
                     </Stack>
@@ -73,9 +76,9 @@ export default function AccountView(){
     const SettingView = () => {
         return(
             <Surface elevation={4} style={{ borderRadius: 8, marginTop: 24, marginHorizontal: 16, padding: 16, backgroundColor: colors.neutral.neutral_10 }}>
-                <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }} viewStyle={{ marginBottom: 16 }}>Account Setting</Typography>
-                <SettingItemView icon='lock-outline' title='Account Security' desc='Change your password'/>
-                <SettingItemView icon='flag-outline' title='Language' desc='Set your account language'/>
+                <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }} viewStyle={{ marginBottom: 16 }}>{t('title.account_setting')}</Typography>
+                <SettingItemView icon='lock-outline' title={t('title.account_security')} desc={t('desciption.account_security')}/>
+                <SettingItemView icon='flag-outline' title={t('title.language')} desc={t('description.language')}/>
             </Surface>
         )
     }
@@ -84,8 +87,8 @@ export default function AccountView(){
         return(
             <Surface elevation={4} style={{ flexDirection: 'row', borderRadius: 8, marginTop: 24, marginHorizontal: 16, padding: 16, backgroundColor: colors.neutral.neutral_10 }}>
                 <MaterialCommunityIcons name={'logout'} size={24} color={colors.neutral.neutral_90} style={{ alignSelf: 'center' }}/>
-                <Typography viewStyle={{ marginHorizontal: 8, flex: 1, alignSelf: 'center' }} textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90 }}>Logout</Typography>
-                <Typography viewStyle={{ alignSelf: 'center' }} textStyle={{ fontSize: 12, color: colors.neutral.neutral_70}}>Version 1.0</Typography>
+                <Typography viewStyle={{ marginHorizontal: 8, flex: 1, alignSelf: 'center' }} textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('title.logout')}</Typography>
+                <Typography viewStyle={{ alignSelf: 'center' }} textStyle={{ fontSize: 12, color: colors.neutral.neutral_70}}>{t('version')} 1.0</Typography>
             </Surface>
         )
     }

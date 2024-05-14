@@ -13,12 +13,92 @@ import useRegisterViewController from '../view-controller/useRegisterViewControl
 import RHFTextField from '../components/hookforms/RHFTextField';
 import RHFPasswordField from '../components/hookforms/RHFPasswordField';
 import CustomButton from '../components/CustomButton';
-import { ScrollView } from 'react-native';
+import { Keyboard, ScrollView } from 'react-native';
 import { Surface, IconButton } from 'react-native-paper';
 import { NavigateProps } from '../entities/GlobalProps';
+import DatePicker from 'react-native-date-picker'
+import { GenderBottomSheet } from '../components/GenderBottomSheet';
+import { useTranslation } from 'react-i18next';
 
 export default function RegisterScreen({ navigation }: NavigateProps){
-    const { method } = useRegisterViewController();
+    const { t } = useTranslation();
+
+    const { 
+        genderRef,
+        isLoadingForm,
+        birthdate, 
+        gender,
+        isOpenBirtdatePicker, 
+        onOpenGendertPicker,
+        onSelectedGender,
+        onChangeBirthdate,
+        onOpenBirtdatePicker, 
+        onCloseBirtdatePicker,
+        method, 
+        doRegister 
+    } = useRegisterViewController();
+
+    const doSubmitForm = async(data: any) => {
+        Keyboard.dismiss();
+        method.handleSubmit(async(data) => {
+            await doRegister(data, () => {
+                navigation.navigate('Main');
+            }, (e: string) => {
+                console.log(e);
+            })
+        }, (e) => console.log(e))
+    }
+
+    const FormView = () => {
+        return(
+            <Stack mb={32}>
+                <FormProvider {...method}>
+                    <RHFTextField 
+                        name='fullname'
+                        title={t('title.fullname')}
+                        required
+                        placeholder={t('placeholder.fullname')}
+                    />
+                    <RHFTextField 
+                        name='birthdate'
+                        title={t('title.birthdate')}
+                        isClickable
+                        disabled
+                        onPress={() => onOpenBirtdatePicker()}
+                        required
+                        placeholder={t('placeholder.birthdate')}
+                    />
+                    <RHFTextField 
+                        name='gender'
+                        title={t('title.gender')}
+                        required
+                        disabled
+                        isClickable
+                        onPress={() => onOpenGendertPicker()}
+                        placeholder={t('placeholder.gender')}
+                    />
+                    <RHFTextField 
+                        name='username'
+                        title={t('title.username')}
+                        required
+                        placeholder={t('placeholder.username')}
+                    />
+                    <RHFPasswordField
+                        name='password'
+                        title={t('title.password')}
+                        required
+                        placeholder={t('placeholder.password')}
+                    />
+                    <RHFPasswordField
+                        name='passwordConfirmation'
+                        title={t('title.password_confirmation')}
+                        required
+                        placeholder={t('placeholder.password_confirmation')}
+                    />
+                </FormProvider>
+            </Stack>
+        )
+    }
 
     return(
         <Page bgColor='#ffffff'>
@@ -33,57 +113,31 @@ export default function RegisterScreen({ navigation }: NavigateProps){
                     />
                 </Stack>
                 <Typography textStyle={{ fontSize: 28, color: colors.neutral.neutral_100, padding: 16 }}>
-                    Sign up your account
+                    {t('title.sign_up_your_account')}
                 </Typography>
                 <Stack style={{ flex: 1 }}>
                     <ScrollView style={{ flexGrow: 1, padding: 16 }}>
-                        <FormProvider {...method}>
-                            <RHFTextField 
-                                name='fullname'
-                                title='Fullname'
-                                required
-                                placeholder='Enter your fullname'
-                            />
-                            <RHFTextField 
-                                name='birthdate'
-                                title='Birthdate'
-                                disabled
-                                isClickable
-                                onPress={() => { console.log('Pressed') }}
-                                required
-                                placeholder='Enter your birthdate'
-                            />
-                            <RHFTextField 
-                                name='gender'
-                                title='Gender'
-                                required
-                                placeholder='Enter your gender'
-                            />
-                            <RHFTextField 
-                                name='username'
-                                title='Username'
-                                required
-                                placeholder='Enter your username'
-                            />
-                            <RHFPasswordField
-                                name='password'
-                                title='Password'
-                                required
-                                placeholder='Enter your password'
-                            />
-                            <RHFPasswordField
-                                name='passwordConfirmation'
-                                title='Password Confirmation'
-                                required
-                                placeholder='Enter your password confirmation'
-                            />
-                        </FormProvider>
+                        <FormView />
                     </ScrollView>
                     <Surface elevation={4} style={{ padding: 16, backgroundColor: colors.neutral.neutral_10 }}>
-                        <CustomButton color='primary' title='Sign Up'/>
+                        <CustomButton loading={isLoadingForm} color='primary' title={t('title.sign_up')} onPress={doSubmitForm}/>
                     </Surface>
                 </Stack>
             </Stack>
+            <DatePicker
+                modal
+                open={isOpenBirtdatePicker}
+                date={birthdate}
+                mode="date"
+                onConfirm={(date) => {
+                    onCloseBirtdatePicker()
+                    onChangeBirthdate(date)
+                }}
+                onCancel={() => {
+                    onCloseBirtdatePicker()
+                }}
+            />
+           <GenderBottomSheet ref={genderRef} height={190} selectedGender={gender} onSelected={(result) => onSelectedGender(result)}/>
         </Page>
     )
 }

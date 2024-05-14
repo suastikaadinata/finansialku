@@ -3,7 +3,7 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React from "react";
+import React, { memo } from "react";
 import Page from "../components/Page";
 import Stack from "../components/Stack";
 import { colors } from "../styles/colors";
@@ -15,6 +15,7 @@ import { FlatList, View } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { PieChart } from "react-native-gifted-charts";
 import useHomeViewController from "../view-controller/useHomeViewController";
+import { useTranslation } from "react-i18next";
 
 interface Props{
     isIncome?: boolean;
@@ -22,6 +23,7 @@ interface Props{
 }
 
 export default function HomeView(){
+    const { t } = useTranslation();
     const { pieData } = useHomeViewController();
 
     const HeaderView = () => {
@@ -35,7 +37,7 @@ export default function HomeView(){
             }}>
                 <Stack style={{ alignSelf: 'center', marginTop: 32, alignItems: 'center' }}>
                     <Icon type="fontawesome" name="account-circle" size={50} color={colors.neutral.neutral_10} />
-                    <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_10, marginTop: 8 }}>Your balance this month is</Typography>
+                    <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_10, marginTop: 8 }}>{t('your_balance_this_month_is')}</Typography>
                     <Stack mt={12} style={{ alignItems: 'center' }}>
                         <View style={{ backgroundColor: colors.neutral.neutral_10, height: 1, width: 150, marginBottom: 12 }}/>
                         <Typography textStyle={{ fontSize: 32, fontWeight: 700, color: colors.neutral.neutral_10 }}>Rp. 5.000.000</Typography>
@@ -52,7 +54,7 @@ export default function HomeView(){
                     <Surface elevation={4} style={{ backgroundColor: colors.neutral.neutral_10, borderRadius: 8, marginLeft: 16, marginRight: 8, padding: 12, alignItems: 'center' }}>
                         <Stack direction="row">
                             <MaterialCommunityIcons name="arrow-up" color={colors.success.main} size={18}/>
-                            <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>Income</Typography>
+                            <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>{t('title.income')}</Typography>
                         </Stack>
                         <Typography textStyle={{ color: colors.success.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>Rp. 500.000</Typography>
                     </Surface>
@@ -61,7 +63,7 @@ export default function HomeView(){
                     <Surface elevation={4} style={{ backgroundColor: colors.neutral.neutral_10, borderRadius: 8, marginLeft: 8, marginRight: 16, padding: 12, alignItems: "center" }}>
                         <Stack direction="row">
                             <MaterialCommunityIcons name="arrow-down" color={colors.danger.main} size={18}/>
-                            <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>Spending</Typography>
+                            <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>{t('title.spending')}</Typography>
                         </Stack>
                         <Typography textStyle={{ color: colors.danger.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>Rp. 200.000</Typography>
                     </Surface>
@@ -79,8 +81,8 @@ export default function HomeView(){
                 backgroundColor: colors.neutral.neutral_10,
                 borderRadius: 8
              }}>
-                <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>Your Monthly Budget</Typography>
-                <Typography textStyle={{ color: colors.neutral.neutral_70 }} viewStyle={{ marginTop: 2 }}>Rp. 150.000 spent of total Rp. 500.000</Typography>
+                <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('your_monthly_budget')}</Typography>
+                <Typography textStyle={{ color: colors.neutral.neutral_70 }} viewStyle={{ marginTop: 2 }}>{t("spend_minus_total", { spend: "Rp. 150.000", total: "Rp. 500.00" })}</Typography>
                 <Stack mt={16} style={{ alignItems: 'center' }}>
                     <PieChart
                         donut
@@ -95,7 +97,7 @@ export default function HomeView(){
         )
     }
 
-    const TransactionItemView = ({ isIncome, isLast }: Props) => {
+    const TransactionItemView = memo(({ isIncome, isLast }: Props) => {
         return(
             <Stack mb={12}>
                 <Stack direction="row">
@@ -111,13 +113,13 @@ export default function HomeView(){
                 { isLast ? null : <Divider style={{ marginTop: 12 }}/> }
             </Stack>
         )
-    }
+    })
 
     const LatestTransactionView = () => {
         return(
             <Surface elevation={4} style={{ flex: 1, marginTop: 24, backgroundColor: colors.neutral.neutral_10, padding: 16 }}>
                 <Typography textStyle={{ color: colors.neutral.neutral_90, fontWeight: 700, fontSize: 16 }}>
-                    Latest Transactions
+                    {t('latest_transaction')}
                 </Typography>
                 <FlatList 
                     data={[1, 2, 3, 4, 5]}

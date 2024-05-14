@@ -14,6 +14,6 @@ export const transactionsSchema = tableSchema({
         { name: 'date', type: 'string' },
         { name: 'amount', type: 'number'},
         { name: 'type', type: 'string'}, // income or spending
-        { name: 'created_at', type: 'string'},
+        { name: 'created_at', type: 'number'},
     ]
 })

@@ -4,6 +4,7 @@
  */
 
 import { Model } from '@nozbe/watermelondb'
+import { relation, field, children, date } from '@nozbe/watermelondb/decorators'
 
 export default class CategoriesModel extends Model {
   static table = 'categories'
@@ -17,5 +18,5 @@ export default class CategoriesModel extends Model {
   
   @field('user_id') userId
   @field('name') name
-  @field('created_at') createdAt
+  @date('created_at') createdAt
 }

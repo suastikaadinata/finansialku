@@ -4,7 +4,7 @@
  */
 
 import { Model } from '@nozbe/watermelondb'
-import { children, field } from '@nozbe/watermelondb/decorators'
+import { children, field, date} from '@nozbe/watermelondb/decorators'
 
 export default class UserModel extends Model {
   static table = 'users'
@@ -23,4 +23,5 @@ export default class UserModel extends Model {
   @field('gender') gender
   @field('username') username
   @field('password') password
+  @date('created_at') createdAt
 }

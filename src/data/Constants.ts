@@ -5,4 +5,14 @@
 
 export default {
     USER_ID: 'user_id',
+
+    GENDER: {
+        MALE: "male",
+        FEMALE: "female"
+    },
+
+    TRANSACTION: {
+        INCOME: "income",
+        SPENDING: "spending"
+    }
 }

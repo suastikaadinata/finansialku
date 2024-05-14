@@ -13,10 +13,13 @@ import { View } from "react-native";
 import TransactionView from "./TransactionView";
 import HomeView from "./HomeView";
 import AccountView from "./AccountView";
+import { useTranslation } from "react-i18next";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainView(){
+    const { t } = useTranslation();
+
     return (
         <Tab.Navigator
           initialRouteName="Home"
@@ -30,7 +33,7 @@ export default function MainView(){
             name="Transaction"
             component={TransactionView}
             options={{
-              tabBarLabel: 'Transaction',
+              tabBarLabel: t('title.transaction'),
               tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="chart-arc" color={color} size={28} />
@@ -41,7 +44,7 @@ export default function MainView(){
             name="Home"
             component={HomeView}
             options={{
-              tabBarLabel: 'Home',
+              tabBarLabel: t('title.home'),
               tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
               tabBarIcon: ({ color }) => (
                 <Stack style={{ 
@@ -81,7 +84,7 @@ export default function MainView(){
             name="Account"
             component={AccountView}
             options={{
-              tabBarLabel: 'Account',
+              tabBarLabel: t('title.account'),
               tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="account-circle" color={color} size={28} />

@@ -34,8 +34,8 @@ const [showPassword, setShowPassword] = useState(false);
           </Stack> }
         <Input
             onBlur={onBlur}
-            onChange={onChange}
-            defaultValue={value}
+            onChangeText={onChange}
+            value={value}
             errorMessage={fieldState.error != undefined ? fieldState.error?.message : helperText}
             labelStyle={{ marginBottom: 4, color: colors.neutral.neutral_90 }}
             secureTextEntry={!showPassword}

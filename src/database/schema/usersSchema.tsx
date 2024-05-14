@@ -13,6 +13,6 @@ export const usersSchema = tableSchema({
         { name: 'gender', type: 'string'},
         { name: 'username', type: 'string' },
         { name: 'password', type: 'string'},
-        { name: 'created_at', type: 'string'},
+        { name: 'created_at', type: 'number'},
     ]
 })

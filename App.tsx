@@ -3,7 +3,7 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,6 +12,7 @@ import RegisterView from './src/view/RegisterView';
 import MainView from './src/view/MainView';
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { colors } from './src/styles/colors';
+import i18n from './src/locales/locales';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,10 @@ const theme = createTheme({
 });
 
 function App() {
+  useEffect(() => {
+    i18n.changeLanguage('en');
+  }, [])
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <ThemeProvider theme={theme}>

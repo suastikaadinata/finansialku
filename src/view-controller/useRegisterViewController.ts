@@ -3,14 +3,21 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React from "react"
+import React, { useState, useRef } from "react"
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import userViewModel from "../view-model/userViewModel";
+import Constants from "../data/Constants";
+import moment from "moment";
 
 export default function useRegisterViewController() {
     const { doCreateUser } = userViewModel();
+    const genderRef = useRef();
+    const [birthdate, setBirthdate] = useState(new Date());
+    const [isLoadingForm, setIsLoadingForm] = useState(false);
+    const [isOpenBirtdatePicker, setIsOpenBirtdatePicker] = useState(false);
+    const [gender, setSelectedGender] = useState('')
 
     const schema = yup.object({
 		username: yup.string().required().label("Username"),
@@ -35,11 +42,58 @@ export default function useRegisterViewController() {
 		resolver: yupResolver(schema),
 	});
 
+    const onChangeBirthdate = (date: Date) => {
+        method.setValue('birthdate', moment(date).format("DD MMMM YYYY"));
+        setBirthdate(date);
+    }
+
+    const onOpenBirtdatePicker = () => {
+        setIsOpenBirtdatePicker(true);
+    }
+
+    const onCloseBirtdatePicker = () => {
+        setIsOpenBirtdatePicker(false);
+    }
+
+    const onOpenGendertPicker = () => {
+        genderRef?.current?.open()
+    }
+
+    const onSelectedGender = (value: string) => {
+        setSelectedGender(value);
+        method.setValue('gender', value)
+        genderRef?.current?.close()
+    }
+
     const doRegister = async(data: any, onSuccess: () => void, onError: (e: string) => void) => {
-        await doCreateUser(data, onSuccess, onError);
+        setIsLoadingForm(true)
+        await doCreateUser({
+            fullname: data.fullname,
+            birthdate: data.birthdate,
+            gender: data.gender,
+            username: data.username,
+            password: data.password
+        }, () => {
+            setIsLoadingForm(false);
+            onSuccess();
+        }, (e: string) => {
+            setIsLoadingForm(false);
+            onError(e)
+        });
     }
 
     return{
-        method    
+        genderRef,
+        isLoadingForm,
+        gender,
+        birthdate,
+        isOpenBirtdatePicker,
+        onOpenGendertPicker,
+        onSelectedGender,
+        onChangeBirthdate,
+        onOpenBirtdatePicker,
+        onCloseBirtdatePicker,
+        method,
+        doRegister    
     }
 }

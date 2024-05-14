@@ -4,6 +4,8 @@
  */
 
 import { Model } from '@nozbe/watermelondb'
+import { relation, field, date } from '@nozbe/watermelondb/decorators'
+import { number } from 'yup'
 
 export default class BudgetModel extends Model {
   static table = 'budgets'
@@ -15,5 +17,5 @@ export default class BudgetModel extends Model {
   
   @field('user_id') userId
   @field('amount') amount
-  @field('created_at') createdAt
+  @date('created_at') createdAt
 }

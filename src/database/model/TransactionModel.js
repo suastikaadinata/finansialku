@@ -4,6 +4,7 @@
  */
 
 import { Model } from '@nozbe/watermelondb'
+import { relation, field, date } from '@nozbe/watermelondb/decorators'
 
 export default class TransactionModel extends Model {
   static table = 'transactions'
@@ -21,5 +22,5 @@ export default class TransactionModel extends Model {
   @field('date') date
   @field('amount') amount
   @field('type') type
-  @field('created_at') createdAt
+  @date('created_at') createdAt
 }
