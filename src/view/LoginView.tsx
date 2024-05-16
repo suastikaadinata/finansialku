@@ -12,15 +12,23 @@ import { FormProvider } from 'react-hook-form';
 import useLoginViewController from '../view-controller/useLoginViewController';
 import RHFTextField from '../components/hookforms/RHFTextField';
 import RHFPasswordField from '../components/hookforms/RHFPasswordField';
-import { Icon, Button } from '@rneui/themed';
 import CustomButton from '../components/CustomButton';
-import { TouchableOpacity } from 'react-native';
+import { Keyboard, TouchableOpacity } from 'react-native';
 import { NavigateProps } from '../entities/GlobalProps';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 
-export default function LoginScreen({ navigation }: NavigateProps){
-    const { method } = useLoginViewController()
+export default function LoginView({ navigation }: NavigateProps){
+    const { method, isLoadingForm, doSubmitLogin } = useLoginViewController()
     const { t } = useTranslation();
+    const dispatch = useDispatch();
+
+    const doSubmitForm = async(data: any) => {
+        Keyboard.dismiss();
+        await doSubmitLogin(data, (e) => {
+            console.log(e)
+        })
+    }
 
     const FormView = () => {
         return(
@@ -32,24 +40,18 @@ export default function LoginScreen({ navigation }: NavigateProps){
                     placeholder={t('placeholder.username')}
                 />
                 <RHFPasswordField 
-                    name='password'
+                    name="password"
                     title={t('title.password')}
                     required
                     placeholder={t('placeholder.password')}
                 />
 
-                <Stack mt={8} direction='row' style={{ flexWrap: 'wrap' }}>
+                {/* <Stack mt={8} direction='row' style={{ flexWrap: 'wrap' }}>
                     <Typography>{t('forgot_password')} </Typography>
                     <TouchableOpacity>
-                        <Typography textStyle={{ color: colors.primary.main, textDecorationColor: 'underline' }}>{t('tap_here')}.</Typography>
+                        <Typography textStyle={{ color: colors.primary.main, textDecorationColor: 'underline' }}>{t('tap_here')}</Typography>
                     </TouchableOpacity>
-                </Stack>
-
-                <Stack mt={24}>
-                    <CustomButton color={'primary'} title={t('title.sign_in')} onPress={() => navigation.navigate("Main")}/>
-                    <CustomButton containerStyle={{ marginTop: 12 }} type='outline' color={'primary'} title={t('title.sign_up')}
-                        onPress={() => navigation.navigate("Register")}/>
-                </Stack>
+                </Stack> */}
             </FormProvider>
         )
     }
@@ -62,6 +64,11 @@ export default function LoginScreen({ navigation }: NavigateProps){
                 </Typography>
                 <Stack mt={16}>
                     <FormView />
+                    <Stack mt={24}>
+                        <CustomButton color={'primary'} loading={isLoadingForm} title={t('title.sign_in')} onPress={method.handleSubmit(doSubmitForm, e => console.log(e))}/>
+                        <CustomButton disabled={isLoadingForm} containerStyle={{ marginTop: 12 }} type='outline' color={'primary'} title={t('title.sign_up')}
+                            onPress={() => navigation.navigate("Register")}/>
+                    </Stack>
                 </Stack>
             </Stack>
         </Page>

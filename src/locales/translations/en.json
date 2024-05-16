@@ -13,17 +13,30 @@
         "home": "Home",
         "transaction": "Transaction",
         "account": "Account",
-        "income": "Income",
-        "spending": "Spending",
         "account_information": "Account Information",
         "account_security": "Account Security",
         "account_setting": "Account Setting",
         "language": "Language",
-        "logout": "Logout"
+        "logout": "Logout",
+        "name": "Name",
+        "description": "Description",
+        "category": "Category",
+        "add_category": "Add Category",
+        "update_category": "Update Category",
+        "add": "Add",
+        "update": "update",
+        "add_transaction": "Add Transaction",
+        "update_transaction": "Update Transaction",
+        "name_transaction": "Name Transaction",
+        "type_transaction": "Type Transaction",
+        "amount": "Amount",
+        "date_transaction": "Date Transaction"
     },
     "description": {
         "account_security": "Change your password",
-        "language": "Set your account language"
+        "language": "Set your account language",
+        "category": "Add your category and maximum 8 categories for all transactions",
+        "max_category": "Maximum 8 categories"
     },
     "placeholder": {
         "username": "Enter your username",
@@ -31,19 +44,32 @@
         "fullname": "Enter your fullname",
         "birthdate": "Select your birthdate",
         "gender": "Select your gender",
-        "password_confirmation": "Enter your password confirmation"
+        "password_confirmation": "Enter your password confirmation",
+        "name": "Enter your name",
+        "description": "Enter your description",
+        "name_transaction": "Enter your name transaction",
+        "type_transaction": "Select your type transaction",
+        "category": "Select your category",
+        "amount": "Enter your amount",
+        "date_transaction": "Select your date transaction"
+    },
+    "gender": {
+        "male": "Male",
+        "female": "Female"
+    },
+    "transaction": {
+        "income": "Income",
+        "spending": "Spending"
     },
     "forgot_password": "Forgot password?",
     "tap_here": "Tap here.",
-    "your_balance_this_month_is": "Your balance this month is",
-    "your_monthly_budget": "Your Monthly Budget",
-    "spend_minus_total": "{{spend}} spend of total {{total}}",
+    "your_balance_this_month_is": "Your balance is",
+    "your_monthly_budget": "Your Budget",
+    "spend_minus_total": "You spend {{spend}} of total {{total}} in the last 30 days",
     "latest_transaction": "Latest Transaction",
-    "monthly_summary": "Monthly Summary",
-    "total_spending_a_month": "Total Spending a Month",
-    "total_income_a_month": "Total Income a Month",
-    "male": "Male",
-    "female": "Female",
+    "monthly_summary": "Last 30 Days Summary",
+    "total_spending_a_month": "Total Spending",
+    "total_income_a_month": "Total Income",
     "version": "Version",
     "select_gender": "Select Gender"
 }

@@ -4,8 +4,8 @@
  */
 
 export interface GenderItem{
-    value: string;
-    title: string;
+    id: string;
+    name: string;
 }
 
 

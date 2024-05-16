@@ -17,14 +17,15 @@ import { Keyboard, ScrollView } from 'react-native';
 import { Surface, IconButton } from 'react-native-paper';
 import { NavigateProps } from '../entities/GlobalProps';
 import DatePicker from 'react-native-date-picker'
-import { GenderBottomSheet } from '../components/GenderBottomSheet';
 import { useTranslation } from 'react-i18next';
+import { SelectItemBottomSheet } from '../components/bottomsheets/SelectItemBottomSheet';
 
-export default function RegisterScreen({ navigation }: NavigateProps){
+export default function RegisterView({ navigation }: NavigateProps){
     const { t } = useTranslation();
 
     const { 
         genderRef,
+        genderData,
         isLoadingForm,
         birthdate, 
         gender,
@@ -40,13 +41,9 @@ export default function RegisterScreen({ navigation }: NavigateProps){
 
     const doSubmitForm = async(data: any) => {
         Keyboard.dismiss();
-        method.handleSubmit(async(data) => {
-            await doRegister(data, () => {
-                navigation.navigate('Main');
-            }, (e: string) => {
-                console.log(e);
-            })
-        }, (e) => console.log(e))
+        await doRegister(data, (e: string) => {
+            console.log(e);
+        })
     }
 
     const FormView = () => {
@@ -102,6 +99,26 @@ export default function RegisterScreen({ navigation }: NavigateProps){
 
     return(
         <Page bgColor='#ffffff'>
+            <DatePicker
+                modal
+                open={isOpenBirtdatePicker}
+                date={birthdate}
+                mode="date"
+                onConfirm={(date) => {
+                    onCloseBirtdatePicker()
+                    onChangeBirthdate(date)
+                }}
+                onCancel={() => {
+                    onCloseBirtdatePicker()
+                }}
+            />
+            <SelectItemBottomSheet  
+                ref={genderRef} 
+                height={190} 
+                title={t('select_gender')}
+                data={genderData} 
+                selectedItem={gender} 
+                onSelected={onSelectedGender}/>
             <Stack style={{ flex: 1 }}>
                 <Stack ml={8} mt={16}>
                     <IconButton
@@ -120,24 +137,10 @@ export default function RegisterScreen({ navigation }: NavigateProps){
                         <FormView />
                     </ScrollView>
                     <Surface elevation={4} style={{ padding: 16, backgroundColor: colors.neutral.neutral_10 }}>
-                        <CustomButton loading={isLoadingForm} color='primary' title={t('title.sign_up')} onPress={doSubmitForm}/>
+                        <CustomButton loading={isLoadingForm} color='primary' title={t('title.sign_up')} onPress={method.handleSubmit(doSubmitForm, e => console.log(e))}/>
                     </Surface>
                 </Stack>
             </Stack>
-            <DatePicker
-                modal
-                open={isOpenBirtdatePicker}
-                date={birthdate}
-                mode="date"
-                onConfirm={(date) => {
-                    onCloseBirtdatePicker()
-                    onChangeBirthdate(date)
-                }}
-                onCancel={() => {
-                    onCloseBirtdatePicker()
-                }}
-            />
-           <GenderBottomSheet ref={genderRef} height={190} selectedGender={gender} onSelected={(result) => onSelectedGender(result)}/>
         </Page>
     )
 }

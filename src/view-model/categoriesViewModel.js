@@ -5,24 +5,35 @@
 
 import moment from "moment"
 import { database } from "../database/database"
-import localStorage from "redux-persist/es/storage"
 import Constants from "../data/Constants"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { Q } from "@nozbe/watermelondb"
 
 export default function categoriesViewModel(){
-    const doCreateCategories = async (name, onSuccess) => {
-        const userId = await localStorage.getItem(Constants.USER_ID)
-        await database.get('categories').create(categories => {
-            categories.name = name
-            categories.userId = userId
-            categories.createdAt = moment()
-        }).then((newBudget) => {
-            onSuccess(newBudget)
-        }).catch((error) => {
-            console.log(error)
+    const getCategories = async() => {
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
+        return await database.get('categories').query(
+            Q.on('users', 'id', userId),
+        ).unsafeFetchRaw()  
+    }
+
+    const doCreateCategories = async (name, description, onSuccess, onError) => {
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
+        await database.write(async() => {
+            await database.get('categories').create(categories => {
+                categories.name = name
+                categories.description = description
+                categories.userId = userId
+            }).then((newData) => {
+                onSuccess(newData._raw)
+            }).catch((error) => {
+                onError(error)
+            })
         })
     }
 
     return{
+        getCategories,
         doCreateCategories
     }
 }

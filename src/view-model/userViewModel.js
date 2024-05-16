@@ -6,8 +6,8 @@
 import { database } from "../database/database"
 import { sha256 } from 'react-native-sha256';
 import moment from "moment";
-import localStorage from "redux-persist/es/storage";
 import { Q } from '@nozbe/watermelondb'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function userViewModel(){
     const doHashPassword = async (password) => {
@@ -37,10 +37,9 @@ export default function userViewModel(){
                     user.gender = data.gender
                     user.username = data.username
                     user.password = hashPassword
-                    user.created_at = moment().unix()
                 }).then((newUser) => {
-                    console.log('new user', newUser)
-                    onSuccess(newUser)
+                    console.log('new user', newUser._raw)
+                    onSuccess(newUser._raw)
                 }).catch((error) => {
                     console.log(error)
                 })
@@ -51,16 +50,17 @@ export default function userViewModel(){
     }
 
     const getUserDetail = async() => {
-        const userId = localStorage.getItem('userId')
+        const userId = AsyncStorage.getItem('userId')
         return await database.get('users').find(userId)
     }
 
     const doLogin = async (username, password, onSuccess, onError) => {
         const user = await findingUser(username)
+        console.log('user', user)
         if(user && user.length > 0){
-            deComparePassword(password, user.password).then((res) => {
+            deComparePassword(password, user[0]._raw.password).then((res) => {
                 if(res){
-                    onSuccess(user)
+                    onSuccess(user[0]._raw)
                 }else{
                     onError("Username or password is wrong")
                 }

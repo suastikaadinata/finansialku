@@ -14,6 +14,7 @@ import Typography from '../components/Typography';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Tile } from '@rneui/base';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 
 interface Props{
     icon?: string;
@@ -23,6 +24,7 @@ interface Props{
 
 export default function AccountView(){
     const { t } = useTranslation();
+    const dispatch = useDispatch();
 
     const AccountInformationView = () => {
         return(
@@ -85,10 +87,14 @@ export default function AccountView(){
 
     const LogoutView = () => {
         return(
-            <Surface elevation={4} style={{ flexDirection: 'row', borderRadius: 8, marginTop: 24, marginHorizontal: 16, padding: 16, backgroundColor: colors.neutral.neutral_10 }}>
-                <MaterialCommunityIcons name={'logout'} size={24} color={colors.neutral.neutral_90} style={{ alignSelf: 'center' }}/>
-                <Typography viewStyle={{ marginHorizontal: 8, flex: 1, alignSelf: 'center' }} textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('title.logout')}</Typography>
-                <Typography viewStyle={{ alignSelf: 'center' }} textStyle={{ fontSize: 12, color: colors.neutral.neutral_70}}>{t('version')} 1.0</Typography>
+            <Surface elevation={4} style={{ borderRadius: 8, marginTop: 24, marginHorizontal: 16, backgroundColor: colors.neutral.neutral_10 }}>
+                <TouchableOpacity style={{ flexDirection: 'row', padding: 16 }} onPress={() => {
+                    dispatch({ type: 'IS_LOGOUT' });
+                }}>
+                    <MaterialCommunityIcons name={'logout'} size={24} color={colors.neutral.neutral_90} style={{ alignSelf: 'center' }}/>
+                    <Typography viewStyle={{ marginHorizontal: 8, flex: 1, alignSelf: 'center' }} textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('title.logout')}</Typography>
+                    <Typography viewStyle={{ alignSelf: 'center' }} textStyle={{ fontSize: 12, color: colors.neutral.neutral_70}}>{t('version')} 1.0</Typography>
+                </TouchableOpacity>
             </Surface>
         )
     }

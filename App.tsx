@@ -4,17 +4,14 @@
  */
 
 import React, { useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginView from './src/view/LoginView';
-import RegisterView from './src/view/RegisterView';
-import MainView from './src/view/MainView';
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { colors } from './src/styles/colors';
 import i18n from './src/locales/locales';
-
-const Stack = createNativeStackNavigator();
+import { Provider } from 'react-redux';
+import { persistor, store } from './src/redux/store/store';
+import { PersistGate } from "redux-persist/integration/react";
+import AppNavigation from './src/view/AppNavigation';
 
 const theme = createTheme({
   lightColors: {
@@ -36,13 +33,11 @@ function App() {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Login" component={LoginView}/>
-            <Stack.Screen name="Register" component={RegisterView}/>
-            <Stack.Screen name="Main" component={MainView}/>
-          </Stack.Navigator>
-        </NavigationContainer>
+        <Provider store={store}>
+          <PersistGate persistor={persistor}>
+            <AppNavigation />
+          </PersistGate>
+        </Provider>
       </ThemeProvider>
     </GestureHandlerRootView>
   );

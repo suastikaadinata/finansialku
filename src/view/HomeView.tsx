@@ -54,7 +54,7 @@ export default function HomeView(){
                     <Surface elevation={4} style={{ backgroundColor: colors.neutral.neutral_10, borderRadius: 8, marginLeft: 16, marginRight: 8, padding: 12, alignItems: 'center' }}>
                         <Stack direction="row">
                             <MaterialCommunityIcons name="arrow-up" color={colors.success.main} size={18}/>
-                            <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>{t('title.income')}</Typography>
+                            <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>{t('transaction.income')}</Typography>
                         </Stack>
                         <Typography textStyle={{ color: colors.success.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>Rp. 500.000</Typography>
                     </Surface>
@@ -63,7 +63,7 @@ export default function HomeView(){
                     <Surface elevation={4} style={{ backgroundColor: colors.neutral.neutral_10, borderRadius: 8, marginLeft: 8, marginRight: 16, padding: 12, alignItems: "center" }}>
                         <Stack direction="row">
                             <MaterialCommunityIcons name="arrow-down" color={colors.danger.main} size={18}/>
-                            <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>{t('title.spending')}</Typography>
+                            <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>{t('transaction.spending')}</Typography>
                         </Stack>
                         <Typography textStyle={{ color: colors.danger.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>Rp. 200.000</Typography>
                     </Surface>

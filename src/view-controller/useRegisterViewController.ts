@@ -8,16 +8,27 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import userViewModel from "../view-model/userViewModel";
-import Constants from "../data/Constants";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import useGlobalDispatch from "../redux/useGlobalDispatch";
+import { GenderItem } from "../entities/Gender";
+import Constants from "../data/Constants";
+import { useTranslation } from "react-i18next";
 
 export default function useRegisterViewController() {
+    const { t } = useTranslation();
     const { doCreateUser } = userViewModel();
+    const { onLoginDispatch } = useGlobalDispatch();
+    const dispatch = useDispatch();
     const genderRef = useRef();
     const [birthdate, setBirthdate] = useState(new Date());
     const [isLoadingForm, setIsLoadingForm] = useState(false);
     const [isOpenBirtdatePicker, setIsOpenBirtdatePicker] = useState(false);
-    const [gender, setSelectedGender] = useState('')
+    const [gender, setSelectedGender] = useState<GenderItem>({} as GenderItem)
+    const genderData: GenderItem[] = [
+        { id: Constants.GENDER.MALE, name: t("gender.male") },
+        { id: Constants.GENDER.FEMALE, name: t("gender.female")}
+    ]
 
     const schema = yup.object({
 		username: yup.string().required().label("Username"),
@@ -59,23 +70,23 @@ export default function useRegisterViewController() {
         genderRef?.current?.open()
     }
 
-    const onSelectedGender = (value: string) => {
-        setSelectedGender(value);
-        method.setValue('gender', value)
+    const onSelectedGender = (result: GenderItem) => {
+        setSelectedGender(result);
+        method.setValue('gender', result.name)
         genderRef?.current?.close()
     }
 
-    const doRegister = async(data: any, onSuccess: () => void, onError: (e: string) => void) => {
+    const doRegister = async(data: any, onError: (e: string) => void) => {
         setIsLoadingForm(true)
         await doCreateUser({
             fullname: data.fullname,
             birthdate: data.birthdate,
-            gender: data.gender,
+            gender: gender.id,
             username: data.username,
             password: data.password
-        }, () => {
+        }, (user: any) => {
             setIsLoadingForm(false);
-            onSuccess();
+            onLoginDispatch(true, user.id)
         }, (e: string) => {
             setIsLoadingForm(false);
             onError(e)
@@ -83,6 +94,7 @@ export default function useRegisterViewController() {
     }
 
     return{
+        genderData,
         genderRef,
         isLoadingForm,
         gender,

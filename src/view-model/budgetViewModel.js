@@ -5,16 +5,15 @@
 
 import moment from "moment"
 import { database } from "../database/database"
-import localStorage from "redux-persist/es/storage"
 import Constants from "../data/Constants"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function budgetViewModel(){
     const doCreateBudget = async (amount, onSuccess) => {
-        const userId = await localStorage.getItem(Constants.USER_ID)
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
         await database.get('budgets').create(budget => {
             budget.amount = amount
             budget.userId = userId
-            budget.createdAt = moment()
         }).then((newBudget) => {
             onSuccess(newBudget)
         }).catch((error) => {
