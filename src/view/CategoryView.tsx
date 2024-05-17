@@ -3,7 +3,7 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React, { useLayoutEffect, memo, useEffect } from 'react';
+import React, { useLayoutEffect, memo, useEffect, useCallback } from 'react';
 import Page from '../components/Page';
 import Stack from '../components/Stack';
 import Typography from '../components/Typography';
@@ -16,18 +16,37 @@ import { CategoryBottomSheet } from '../components/bottomsheets/CategoryBottomSh
 import useCategoryViewController from '../view-controller/useCategoryViewController';
 import { CategoryItem } from '../entities/Category';
 import { useTranslation } from 'react-i18next';
+import { useFocusEffect } from '@react-navigation/native';
+import { BackHandler } from 'react-native';
 
 interface Props{
     category?: CategoryItem;
 }
 
-export default function CategoryView({ navigation }: NavigateProps){
+export default function CategoryView({ navigation, route }: NavigateProps){
+    const { onGoBack } = route.params
     const { t } = useTranslation();
-    const { categoryRef, categories, fetchCategories, onOpenCategoryBS, onCreateCategories } = useCategoryViewController()
+    const { categoryRef, isUpdate, categories, selectedCategory, isEdit, fetchCategories, doDisableEdit, onOpenCategoryBS, onSelectedCategory, onCreateCategories, onUpdateCategories } = useCategoryViewController()
 
     useEffect(() => {
         fetchCategories()
     }, [])
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                isUpdate ? onGoBack() : navigation.goBack()
+                return true;
+            };
+        
+            const subscription = BackHandler.addEventListener(
+                'hardwareBackPress',
+                onBackPress
+            );
+    
+            return () => subscription.remove();
+        }, [isUpdate])
+    )
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -36,7 +55,9 @@ export default function CategoryView({ navigation }: NavigateProps){
             headerStyle: {
                 backgroundColor: colors.neutral.neutral_10,
             },
-            onBackPressed: () => navigation.goBack(),
+            onBackPressed: () => { 
+                isUpdate ? onGoBack() : navigation.goBack()
+            },
             headerRight: () => (
                 <TouchableOpacity delayPressIn={0} onPress={() => {}}>
                     <MaterialCommunityIcons 
@@ -45,6 +66,7 @@ export default function CategoryView({ navigation }: NavigateProps){
                         color={colors.neutral.neutral_90}
                         onPress={() => {
                             if(categories.length < 8){
+                                doDisableEdit()
                                 onOpenCategoryBS()
                             }else{
                                 ToastAndroid.show(t('description.max_category'), ToastAndroid.SHORT);
@@ -54,15 +76,15 @@ export default function CategoryView({ navigation }: NavigateProps){
                 </TouchableOpacity>
             )
         })
-    }, [navigation, categories])
+    }, [navigation, categories, isUpdate])
 
     const CategoryItemView = memo(({ category }: Props) => {
         return(
-            <Stack mb={12}>
+            <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => onSelectedCategory(category!)}>
                 <Typography textStyle={{ fontWeight: 700, color: colors.neutral.neutral_90 }}>{category?.name}</Typography>
                 <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_60 }} viewStyle={{ marginTop: 4 }}>{category?.description ?? "-"}</Typography>
                 <Divider style={{ marginTop: 8 }}/> 
-            </Stack>
+            </TouchableOpacity>
         )
     })
 
@@ -70,11 +92,13 @@ export default function CategoryView({ navigation }: NavigateProps){
         <Page bgColor={colors.neutral.neutral_10}>
             <CategoryBottomSheet 
                 ref={categoryRef}
+                isEdit={isEdit}
                 isAdd={true}
                 height={400}
+                initialData={selectedCategory}
                 onSubmit={(data) => {
                     Keyboard.dismiss();
-                    onCreateCategories(data.name, data.description)
+                    isEdit ? onUpdateCategories(data.name, data.description) : onCreateCategories(data.name, data.description)
                 }}
             />
             <ScrollView contentContainerStyle={{ padding: 16, flexGrow: 1 }}>

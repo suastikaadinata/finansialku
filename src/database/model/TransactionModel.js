@@ -19,6 +19,7 @@ export default class TransactionModel extends Model {
   @field('user_id') userId
   @field('category_id') categoryId
   @field('name') name
+  @field('description') description
   @date('date') date
   @field('amount') amount
   @field('type') type

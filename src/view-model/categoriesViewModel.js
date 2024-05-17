@@ -32,8 +32,23 @@ export default function categoriesViewModel(){
         })
     }
 
+    const doUpdateCategories = async(id, name, description, onSuccess, onError) => {
+        await database.write(async() => {
+            const categories = await database.get('categories').find(id)
+            await categories.update(item => {
+                item.name = name
+                item.description = description
+            }).then(() => {
+                onSuccess()
+            }).catch((error) => {
+                onError(error)
+            })
+        })
+    }
+
     return{
         getCategories,
-        doCreateCategories
+        doCreateCategories,
+        doUpdateCategories
     }
 }

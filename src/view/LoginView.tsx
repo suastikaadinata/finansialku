@@ -21,7 +21,6 @@ import { useDispatch } from 'react-redux';
 export default function LoginView({ navigation }: NavigateProps){
     const { method, isLoadingForm, doSubmitLogin } = useLoginViewController()
     const { t } = useTranslation();
-    const dispatch = useDispatch();
 
     const doSubmitForm = async(data: any) => {
         Keyboard.dismiss();
@@ -45,13 +44,6 @@ export default function LoginView({ navigation }: NavigateProps){
                     required
                     placeholder={t('placeholder.password')}
                 />
-
-                {/* <Stack mt={8} direction='row' style={{ flexWrap: 'wrap' }}>
-                    <Typography>{t('forgot_password')} </Typography>
-                    <TouchableOpacity>
-                        <Typography textStyle={{ color: colors.primary.main, textDecorationColor: 'underline' }}>{t('tap_here')}</Typography>
-                    </TouchableOpacity>
-                </Stack> */}
             </FormProvider>
         )
     }

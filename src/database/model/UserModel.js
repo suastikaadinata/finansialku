@@ -19,7 +19,7 @@ export default class UserModel extends Model {
   @children('transactions') transactions
 
   @field('fullname') fullname
-  @field('birthdate') birthdate
+  @date('birthdate') birthdate
   @field('gender') gender
   @field('username') username
   @field('password') password

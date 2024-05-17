@@ -3,7 +3,7 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React, { forwardRef, ComponentProps } from 'react';
+import React, { forwardRef, ComponentProps, useEffect } from 'react';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { BaseBottomSheet } from './BaseBottomSheet';
 import Stack from '../Stack';
@@ -20,10 +20,12 @@ import { CategoryItem } from '../../entities/Category';
 
 interface Props{
     isAdd: boolean;
+    isEdit?: boolean;
+    initialData?: CategoryItem;
     onSubmit: (data: CategoryItem) => void;
 }
 
-export const CategoryBottomSheet = forwardRef(({ isAdd, onSubmit, ...props }: Props & ComponentProps<typeof RBSheet>, ref) => {
+export const CategoryBottomSheet = forwardRef(({ isAdd, isEdit, initialData, onSubmit, ...props }: Props & ComponentProps<typeof RBSheet>, ref) => {
     const { t } = useTranslation();
     
     const schema = yup.object({
@@ -41,6 +43,13 @@ export const CategoryBottomSheet = forwardRef(({ isAdd, onSubmit, ...props }: Pr
 		resolver: yupResolver(schema),
 	});
 
+    useEffect(() => {
+        if(isEdit && initialData){
+            method.setValue('name', initialData.name)
+            method.setValue('description', initialData.description)
+        }
+    }, [isEdit, initialData])
+
     const onSubmitForm = async(data: any) => {
         method.reset()
         onSubmit({
@@ -52,7 +61,7 @@ export const CategoryBottomSheet = forwardRef(({ isAdd, onSubmit, ...props }: Pr
     return(
         <BaseBottomSheet ref={ref} {...props}>
             <Stack p={16}>
-                <Typography textStyle={{ fontSize: 18, fontWeight: 700, color: colors.neutral.neutral_90 }} viewStyle={{ marginBottom: 16 }}>{t('title.add_category')}</Typography>
+                <Typography textStyle={{ fontSize: 18, fontWeight: 700, color: colors.neutral.neutral_90 }} viewStyle={{ marginBottom: 16 }}>{isEdit ? t('title.edit_category') : t('title.add_category')}</Typography>
                 <FormProvider {...method}>
                     <RHFTextField
                         name={"name"}
@@ -68,7 +77,7 @@ export const CategoryBottomSheet = forwardRef(({ isAdd, onSubmit, ...props }: Pr
                </FormProvider>
                <Stack mt={24}>
                     <CustomButton 
-                        title={t('title.add')}
+                        title={isEdit ? t('title.edit') : t('title.add')}
                         color={'primary'}
                         onPress={method.handleSubmit(onSubmitForm, e => console.log(e))}
                     />

@@ -13,8 +13,9 @@ import { colors } from '../../styles/colors';
 import { useTranslation } from 'react-i18next';
 import SelectItemView from '../SelectItemView';
 import { CategoryItem } from '../../entities/Category';
+import { SelectItem } from '../../entities/Select';
 
-export const SelectItemBottomSheet = forwardRef(({title, data, selectedItem, onSelected, ...props}: {title: string, data: any[], selectedItem: any, props?: ComponentProps<typeof RBSheet>, onSelected: (value: any) => void}, ref) => {
+export const SelectItemBottomSheet = forwardRef(({title, data, selectedItem, onSelected, ...props}: {title: string, data: SelectItem[], selectedItem: any, props?: ComponentProps<typeof RBSheet>, onSelected: (value: any) => void}, ref) => {
     const { t } = useTranslation();
 
     return(

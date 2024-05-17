@@ -3,7 +3,7 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Page from '../components/Page';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { IconButton, Surface } from 'react-native-paper';
@@ -14,7 +14,12 @@ import Typography from '../components/Typography';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Tile } from '@rneui/base';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import useGlobalDispatch from '../redux/useGlobalDispatch';
+import useAccountViewController from '../view-controller/useAccountViewController';
+import { useIsFocused } from '@react-navigation/native';
+import Constants from '../data/Constants';
+import moment from 'moment';
+import { SelectItemBottomSheet } from '../components/bottomsheets/SelectItemBottomSheet';
 
 interface Props{
     icon?: string;
@@ -24,27 +29,33 @@ interface Props{
 
 export default function AccountView(){
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const isFocused = useIsFocused();
+    const { onLogoutDispatch } = useGlobalDispatch();
+    const { languageRef, languageData, userDetail, selectedLanguage, onOpenLanguageBS, onSelectedLanguage, fetchUserDetail } = useAccountViewController();
+
+    useEffect(() => { 
+        if(isFocused) fetchUserDetail()
+    }, [isFocused])
 
     const AccountInformationView = () => {
         return(
             <Surface elevation={4} style={{ borderRadius: 8, marginTop: 36, marginHorizontal: 16, padding: 16, backgroundColor: colors.neutral.neutral_10 }}>
-                <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('account_information')}</Typography>
+                <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('title.account_information')}</Typography>
                 <Stack mt={12} direction='row'>
                     <Stack style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <Icon type="fontawesome" name="account-circle" size={44} color={colors.neutral.neutral_90} />
                     </Stack>
                     <Stack ml={12} mr={12} style={{ flex: 1 }}>
-                        <Typography textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90 }}>Suastika Adinata</Typography>
-                        <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_90 }} viewStyle={{ marginTop: 2 }}>@suastikaadinata</Typography>
+                        <Typography textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90 }}>{userDetail.fullname}</Typography>
+                        <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_90 }} viewStyle={{ marginTop: 2 }}>@{userDetail.username}</Typography>
                         <Stack direction='row' mt={2}>
                             <Stack direction='row'>
                                 <MaterialCommunityIcons name="calendar" size={16} color={colors.success.main} />
-                                <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_90 }} viewStyle={{ marginLeft: 4, alignSelf: 'center' }}>18 Agu 2000</Typography>
+                                <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_90 }} viewStyle={{ marginLeft: 4, alignSelf: 'center' }}>{moment.unix(Number(userDetail.birthdate ?? 0)).format("DD MMMM YYYY")}</Typography>
                             </Stack>
                             <Stack ml={8} direction='row'>
-                                <MaterialCommunityIcons name="gender-male" size={16} color={colors.info.main} />
-                                <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_90 }} viewStyle={{ marginLeft: 4, alignSelf: 'center' }}>{t('male')}</Typography>
+                                <MaterialCommunityIcons name={userDetail.gender == Constants.GENDER.MALE ? "gender-male" : "gender-female"} size={16} color={userDetail.gender == Constants.GENDER.MALE ? colors.info.main : colors.danger.hover} />
+                                <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_90 }} viewStyle={{ marginLeft: 4, alignSelf: 'center' }}>{userDetail.gender == Constants.GENDER.MALE ? t('gender.male') : t('gender.female')}</Typography>
                             </Stack>
                         </Stack>
                     </Stack>
@@ -79,7 +90,7 @@ export default function AccountView(){
         return(
             <Surface elevation={4} style={{ borderRadius: 8, marginTop: 24, marginHorizontal: 16, padding: 16, backgroundColor: colors.neutral.neutral_10 }}>
                 <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }} viewStyle={{ marginBottom: 16 }}>{t('title.account_setting')}</Typography>
-                <SettingItemView icon='lock-outline' title={t('title.account_security')} desc={t('desciption.account_security')}/>
+                <SettingItemView icon='lock-outline' title={t('title.account_security')} desc={t('description.account_security')}/>
                 <SettingItemView icon='flag-outline' title={t('title.language')} desc={t('description.language')}/>
             </Surface>
         )
@@ -88,9 +99,7 @@ export default function AccountView(){
     const LogoutView = () => {
         return(
             <Surface elevation={4} style={{ borderRadius: 8, marginTop: 24, marginHorizontal: 16, backgroundColor: colors.neutral.neutral_10 }}>
-                <TouchableOpacity style={{ flexDirection: 'row', padding: 16 }} onPress={() => {
-                    dispatch({ type: 'IS_LOGOUT' });
-                }}>
+                <TouchableOpacity style={{ flexDirection: 'row', padding: 16 }} onPress={onLogoutDispatch}>
                     <MaterialCommunityIcons name={'logout'} size={24} color={colors.neutral.neutral_90} style={{ alignSelf: 'center' }}/>
                     <Typography viewStyle={{ marginHorizontal: 8, flex: 1, alignSelf: 'center' }} textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('title.logout')}</Typography>
                     <Typography viewStyle={{ alignSelf: 'center' }} textStyle={{ fontSize: 12, color: colors.neutral.neutral_70}}>{t('version')} 1.0</Typography>
@@ -101,6 +110,13 @@ export default function AccountView(){
 
     return(
         <Page>
+            <SelectItemBottomSheet  
+                ref={languageRef} 
+                height={190} 
+                title={t('title.select_language')}
+                data={languageData} 
+                selectedItem={selectedLanguage} 
+                onSelected={onSelectedLanguage}/>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <AccountInformationView />
                 <SettingView />

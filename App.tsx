@@ -17,10 +17,12 @@ const theme = createTheme({
   lightColors: {
     primary:  colors.primary.main,
     secondary: colors.secondary.main,
+    error: colors.danger.main,
   },
   darkColors: {
     primary:  colors.primary.main,
     secondary: colors.secondary.main,
+    error: colors.danger.main,
   },
   mode: 'light'
 });

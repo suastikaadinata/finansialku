@@ -11,6 +11,7 @@ export const transactionsSchema = tableSchema({
         { name: 'user_id', type: 'string', isIndexed: true },
         { name: 'category_id', type: 'string', isIndexed: true },
         { name: 'name', type: 'string'},
+        { name: 'description', type: 'string', isOptional: true},
         { name: 'date', type: 'number' },
         { name: 'amount', type: 'number'},
         { name: 'type', type: 'string'}, // income or spending

@@ -3,7 +3,7 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import Page from "../components/Page";
 import Stack from "../components/Stack";
 import { colors } from "../styles/colors";
@@ -16,15 +16,26 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { PieChart } from "react-native-gifted-charts";
 import useHomeViewController from "../view-controller/useHomeViewController";
 import { useTranslation } from "react-i18next";
+import { currencyFormat } from "../utils/Utilities";
+import { useIsFocused } from "@react-navigation/native";
+import Constants from "../data/Constants";
+import { TransactionItem } from "../entities/Transaction";
+import moment from "moment";
 
 interface Props{
     isIncome?: boolean;
     isLast?: boolean;
+    transaction?: TransactionItem;
 }
 
 export default function HomeView(){
     const { t } = useTranslation();
-    const { pieData } = useHomeViewController();
+    const isFocused = useIsFocused();
+    const { pieData, totalIncome, totalSpending, totalBalance, transactionData, fetchTransaction } = useHomeViewController();
+
+    useEffect(() => {
+        if(isFocused) fetchTransaction()
+    }, [isFocused])
 
     const HeaderView = () => {
         return(
@@ -40,7 +51,7 @@ export default function HomeView(){
                     <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_10, marginTop: 8 }}>{t('your_balance_this_month_is')}</Typography>
                     <Stack mt={12} style={{ alignItems: 'center' }}>
                         <View style={{ backgroundColor: colors.neutral.neutral_10, height: 1, width: 150, marginBottom: 12 }}/>
-                        <Typography textStyle={{ fontSize: 32, fontWeight: 700, color: colors.neutral.neutral_10 }}>Rp. 5.000.000</Typography>
+                        <Typography textStyle={{ fontSize: 32, fontWeight: 700, color: colors.neutral.neutral_10 }}>{currencyFormat(totalBalance)}</Typography>
                     </Stack>
                 </Stack>
             </Stack>
@@ -56,7 +67,7 @@ export default function HomeView(){
                             <MaterialCommunityIcons name="arrow-up" color={colors.success.main} size={18}/>
                             <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>{t('transaction.income')}</Typography>
                         </Stack>
-                        <Typography textStyle={{ color: colors.success.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>Rp. 500.000</Typography>
+                        <Typography textStyle={{ color: colors.success.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>{currencyFormat(totalIncome)}</Typography>
                     </Surface>
                 </Stack>
                 <Stack style={{ flex: 1 }}>
@@ -65,7 +76,7 @@ export default function HomeView(){
                             <MaterialCommunityIcons name="arrow-down" color={colors.danger.main} size={18}/>
                             <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>{t('transaction.spending')}</Typography>
                         </Stack>
-                        <Typography textStyle={{ color: colors.danger.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>Rp. 200.000</Typography>
+                        <Typography textStyle={{ color: colors.danger.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>{currencyFormat(totalSpending)}</Typography>
                     </Surface>
                 </Stack>
             </Stack>
@@ -97,7 +108,7 @@ export default function HomeView(){
         )
     }
 
-    const TransactionItemView = memo(({ isIncome, isLast }: Props) => {
+    const TransactionItemView = memo(({ isIncome, transaction, isLast }: Props) => {
         return(
             <Stack mb={12}>
                 <Stack direction="row">
@@ -105,10 +116,10 @@ export default function HomeView(){
                         <MaterialCommunityIcons name={isIncome ? "cash-plus" : "credit-card-minus"} size={24} color={isIncome ? colors.success.main : colors.danger.main}/>
                     </Stack>
                     <Stack ml={8} mr={8} style={{ alignSelf: 'center', flex: 1 }}>
-                        <Typography textStyle={{ color: colors.neutral.neutral_90, fontWeight: 700 }}>Kopi Skena</Typography>
-                        <Typography textStyle={{ color: colors.neutral.neutral_70 }} viewStyle={{ marginTop: 2 }}>24 Mar 2024</Typography>
+                        <Typography textStyle={{ color: colors.neutral.neutral_90, fontWeight: 700 }}>{transaction?.name}</Typography>
+                        <Typography textStyle={{ color: colors.neutral.neutral_70 }} viewStyle={{ marginTop: 2 }}>{moment.unix(Number(transaction?.date ?? 0)).format("DD MMM YYYY")}</Typography>
                     </Stack>
-                    <Typography viewStyle={{ alignSelf: 'center' }} textStyle={{ fontSize: 16, fontWeight: 700, color: isIncome ? colors.success.main : colors.danger.main  }}>{isIncome ? "+": "-"} Rp. 50.000</Typography>
+                    <Typography viewStyle={{ alignSelf: 'center' }} textStyle={{ fontSize: 16, fontWeight: 700, color: isIncome ? colors.success.main : colors.danger.main  }}>{isIncome ? "+": "-"} {currencyFormat(transaction?.amount)}</Typography>
                 </Stack>
                 { isLast ? null : <Divider style={{ marginTop: 12 }}/> }
             </Stack>
@@ -122,10 +133,11 @@ export default function HomeView(){
                     {t('latest_transaction')}
                 </Typography>
                 <FlatList 
-                    data={[1, 2, 3, 4, 5]}
+                    data={transactionData}
                     contentContainerStyle={{ marginVertical: 16, paddingBottom: 8 }}
                     scrollEnabled={false}
-                    renderItem={({ item, index }) => <TransactionItemView isIncome={item % 2 === 0} isLast={index == 4}/>}
+                    renderItem={({ item, index }) => <TransactionItemView isIncome={item.type == Constants.TRANSACTION.INCOME} transaction={item} isLast={index == (transactionData.length - 1)}/>}
+                    ListEmptyComponent={() => <Typography textStyle={{ color: colors.neutral.neutral_60 }}>{t('empty.latest_transaction')}</Typography>}
                 />
             </Surface>
         )

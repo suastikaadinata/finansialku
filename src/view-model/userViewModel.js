@@ -8,6 +8,7 @@ import { sha256 } from 'react-native-sha256';
 import moment from "moment";
 import { Q } from '@nozbe/watermelondb'
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "../data/Constants";
 
 export default function userViewModel(){
     const doHashPassword = async (password) => {
@@ -33,7 +34,7 @@ export default function userViewModel(){
             await database.write(async() => {
                 await database.get('users').create(user => {
                     user.fullname = data.fullname
-                    user.birthdate = data.birthdate
+                    user.birthdate = moment(data.birthdate).unix()
                     user.gender = data.gender
                     user.username = data.username
                     user.password = hashPassword
@@ -50,8 +51,9 @@ export default function userViewModel(){
     }
 
     const getUserDetail = async() => {
-        const userId = AsyncStorage.getItem('userId')
-        return await database.get('users').find(userId)
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
+        const user = await database.get('users').find(userId)
+        return user._raw
     }
 
     const doLogin = async (username, password, onSuccess, onError) => {

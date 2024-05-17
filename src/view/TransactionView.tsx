@@ -6,7 +6,7 @@
 import React, { memo } from "react";
 import Page from "../components/Page";
 import { colors } from "../styles/colors";
-import { FlatList, ScrollView, TouchableOpacity } from "react-native";
+import { Animated, FlatList, ScrollView, TouchableOpacity } from "react-native";
 import Stack from "../components/Stack";
 import Typography from "../components/Typography";
 import { Divider, IconButton, Surface } from "react-native-paper";
@@ -20,6 +20,11 @@ import { TransactionItem } from "../entities/Transaction";
 import moment from "moment";
 import { currencyFormat } from "../utils/Utilities";
 import { GraphItem } from "../entities/Graph";
+import Collapsible from "react-native-collapsible";
+import CustomButton from "../components/CustomButton";
+import { TransactionItemViewAnimated } from "../components/TransactionItemViewAnimated";
+import { DeleteConfirmationBottomSheet } from "../components/bottomsheets/DeleteConfirmationBottomSheet";
+import { on } from "@nozbe/watermelondb/QueryDescription";
 
 interface Props{
     isSelected?: boolean;
@@ -34,7 +39,20 @@ interface Props{
 
 export default function TransactionView({ navigation }: NavigateProps){
     const { t } = useTranslation();
-    const { totalMoney, pieData, selectedType, transactionData, onSelectedType, doGetTransactionByType } = useTransactionViewController();
+    const { 
+        deleteConfirmationRef, 
+        totalMoney, 
+        pieData, 
+        selectedType, 
+        selectedItem, 
+        transactionData, 
+        onSelectedType, 
+        onSelectedItem, 
+        onOpenDeleteConfirmationBS, 
+        onCloseDeleteConfirmationBS, 
+        doHandlingOnGoBack, 
+        onDeleteTransaction 
+    } = useTransactionViewController();
 
     const HeaderView = () => {
         return(
@@ -49,7 +67,12 @@ export default function TransactionView({ navigation }: NavigateProps){
                         style={{ borderColor: colors.primary.main }}
                         iconColor={colors.primary.main}
                         size={20}
-                        onPress={() => navigation.navigate('Category')}
+                        onPress={() => navigation.navigate('Category', {
+                            onGoBack: () => {
+                                navigation.goBack()
+                                doHandlingOnGoBack(selectedType)
+                            }
+                        })}
                     />
                 </Stack>
                 <IconButton 
@@ -61,11 +84,7 @@ export default function TransactionView({ navigation }: NavigateProps){
                     onPress={() => navigation.navigate('AddTransaction', {
                         onGoBack: (type: string) => {
                             navigation.goBack()
-                            if(type == selectedType){
-                                doGetTransactionByType(type)
-                            }else{
-                                onSelectedType(type)
-                            }
+                            doHandlingOnGoBack(type)
                         }
                     })}
                 />
@@ -92,8 +111,8 @@ export default function TransactionView({ navigation }: NavigateProps){
     const IncomeSpendingTypeView = () => {
         return(
             <Surface style={{ flexDirection: 'row', marginTop: 8, marginHorizontal: 16, backgroundColor: colors.neutral.neutral_10, borderRadius: 25, height: 50 }}>
-                <TypeView isSelected={selectedType == 'income'} title={t('transaction.income')} onPress={() => onSelectedType('income')}/>
-                <TypeView isSelected={selectedType == 'spending'} title={t('transaction.spending')} onPress={() => onSelectedType('spending')}/>
+                <TypeView isSelected={selectedType == Constants.TRANSACTION.INCOME} title={t('transaction.income')} onPress={() => onSelectedType(Constants.TRANSACTION.INCOME)}/>
+                <TypeView isSelected={selectedType == Constants.TRANSACTION.SPENDING} title={t('transaction.spending')} onPress={() => onSelectedType(Constants.TRANSACTION.SPENDING)}/>
             </Surface>
         )
     }
@@ -120,6 +139,7 @@ export default function TransactionView({ navigation }: NavigateProps){
                 borderRadius: 8
              }}>
                 <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('monthly_summary')}</Typography>
+                { pieData.length > 0 ?
                 <Stack mt={16} direction="row">
                     <Stack mr={8} style={{ flex: 1, alignItems: 'center' }}>
                         <PieChart
@@ -140,6 +160,11 @@ export default function TransactionView({ navigation }: NavigateProps){
                         />
                     </Stack>
                 </Stack>
+                :
+                <Stack mt={4}>
+                    <Typography textStyle={{ color: colors.neutral.neutral_60 }}>{t('empty.chart')}</Typography>
+                </Stack>
+                }
                 <Stack direction="row" mt={24} style={{ justifyContent: 'space-between' }}>
                     <Typography textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90, alignSelf: 'flex-end' }}>{selectedType == Constants.TRANSACTION.INCOME ? t('total_income_a_month') : t('total_spending_a_month')}:</Typography>
                     <Typography textStyle={{ fontSize: 20, fontWeight: 700, color: selectedType == Constants.TRANSACTION.INCOME ? colors.success.main : colors.danger.main }}>{currencyFormat(totalMoney)}</Typography>
@@ -147,24 +172,6 @@ export default function TransactionView({ navigation }: NavigateProps){
             </Surface>
         )
     }
-
-    const TransactionItemView = memo(({ isIncome, isLast, transaction }: Props) => {
-        return(
-            <Stack mb={12}>
-                <Stack direction="row">
-                    <Stack style={{ padding: 12, backgroundColor: isIncome ? colors.success.surface : colors.danger.surface, borderRadius: 8 }}>
-                        <MaterialCommunityIcons name={isIncome ? "cash-plus" : "credit-card-minus"} size={24} color={isIncome ? colors.success.main : colors.danger.main}/>
-                    </Stack>
-                    <Stack ml={8} mr={8} style={{ alignSelf: 'center', flex: 1 }}>
-                        <Typography textStyle={{ color: colors.neutral.neutral_90, fontWeight: 700 }}>{transaction?.name}</Typography>
-                        <Typography textStyle={{ color: colors.neutral.neutral_70 }} viewStyle={{ marginTop: 2 }}>{moment.unix(Number(transaction?.date ?? 0)).format("DD MMM YYYY")}</Typography>
-                    </Stack>
-                    <Typography viewStyle={{ alignSelf: 'center' }} textStyle={{ fontSize: 16, fontWeight: 700, color: isIncome ? colors.success.main : colors.danger.main  }}>{isIncome ? "+": "-"} {currencyFormat(transaction?.amount)}</Typography>
-                </Stack>
-                { isLast ? null : <Divider style={{ marginTop: 12 }}/> }
-            </Stack>
-        )
-    })
 
     const LatestTransactionView = () => {
         return(
@@ -176,7 +183,27 @@ export default function TransactionView({ navigation }: NavigateProps){
                     data={transactionData}
                     contentContainerStyle={{ marginVertical: 16, paddingBottom: 8 }}
                     scrollEnabled={false}
-                    renderItem={({ item, index }) => <TransactionItemView isIncome={item.type == Constants.TRANSACTION.INCOME} isLast={index == (transactionData.length - 1)} transaction={item}/>}
+                    ListEmptyComponent={() => (
+                        <Typography textStyle={{ color: colors.neutral.neutral_60 }}>{t('empty.latest_transaction')}</Typography>
+                    )}
+                    renderItem={({ item, index }) => ( 
+                        <TransactionItemViewAnimated 
+                            isSelectedID={selectedItem} 
+                            isIncome={item.type == Constants.TRANSACTION.INCOME}  
+                            isLast={index == (transactionData.length - 1)} 
+                            transaction={item}
+                            onPress={() => onSelectedItem(selectedItem == item.id ? '' : (item.id ?? ''))}
+                            onDelete={onOpenDeleteConfirmationBS}
+                            onEdit={() => navigation.navigate('AddTransaction', {
+                                onGoBack: (type: string) => {
+                                    navigation.goBack()
+                                    doHandlingOnGoBack(type)
+                                },
+                                initialData: item,
+                                isEdit: true
+                            })}
+                        />
+                    )}
                 />
             </Surface>
         )
@@ -185,6 +212,14 @@ export default function TransactionView({ navigation }: NavigateProps){
     return(
         <Page bgColor={colors.neutral.neutral_20}>
             <HeaderView />
+            <DeleteConfirmationBottomSheet 
+                ref={deleteConfirmationRef}
+                title={t('title.delete_transaction')}
+                description={t('description.delete_transaction')}
+                height={200}
+                onDelete={onDeleteTransaction}
+                onCancel={onCloseDeleteConfirmationBS}
+            />
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <IncomeSpendingTypeView />
                 <CategoryGraphView />

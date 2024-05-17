@@ -11,7 +11,7 @@ import Constants from "../data/Constants";
 export default function useGlobalDispatch(){
     const dispatch = useDispatch();
 
-    const onLoginDispatch = (isAuthentication: boolean, userId: string) => {
+    const onLoginDispatch = (userId: string) => {
         AsyncStorage.setItem(Constants.USER_ID, userId)
         dispatch({
             type: 'IS_LOGIN',

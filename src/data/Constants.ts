@@ -14,5 +14,10 @@ export default {
     TRANSACTION: {
         INCOME: "income",
         SPENDING: "spending"
+    },
+
+    LANGUAGE: {
+        ENGLISH: "en",
+        INDONESIAN: "id"
     }
 }

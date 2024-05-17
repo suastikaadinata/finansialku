@@ -9,7 +9,7 @@ export const usersSchema = tableSchema({
     name: 'users',
     columns: [
         { name: 'fullname', type: 'string' },
-        { name: 'birthdate', type: 'string' },
+        { name: 'birthdate', type: 'number' },
         { name: 'gender', type: 'string'},
         { name: 'username', type: 'string' },
         { name: 'password', type: 'string'},

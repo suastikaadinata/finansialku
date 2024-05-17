@@ -3,11 +3,6 @@
  * Copyright (c) 2024 - Made with love
  */
 
-export interface TypeTransactionItem {
-    id: string;
-    name: string;
-}
-
 export interface TransactionItem {
     _changed?: string;
     _status?: string;

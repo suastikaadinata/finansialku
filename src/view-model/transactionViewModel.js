@@ -20,6 +20,7 @@ export default function transactionViewModel(){
                 transaction.userId = userId
                 transaction.categoryId = data.categoryId
                 transaction.name = data.name
+                transaction.description = data.description
                 transaction.date = moment(data.date).unix()
                 transaction.amount = data.amount
                 transaction.type = data.type
@@ -38,7 +39,17 @@ export default function transactionViewModel(){
             Q.unsafeSqlQuery(
               `select categories.name as category_name, sum(transactions.amount) as total 
               from transactions left join categories on transactions.category_id = categories.id 
-              where transactions.user_id = '${userId}' and (transactions.date between ${last30day} and ${currentDate}) and transactions.type = '${type}' group by transactions.category_id`,
+              where transactions.user_id = '${userId}' and (transactions.date between ${last30day} and ${currentDate}) and transactions.type = '${type}' group by transactions.category_id
+              order by total desc`,
+            )
+        ).unsafeFetchRaw()
+    }
+
+    const getTransactionSumByType = async(type) => {
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
+        return await database.get('transactions').query(
+            Q.unsafeSqlQuery(
+              `select sum(amount) as total from transactions where user_id = '${userId}' and (date between ${last30day} and ${currentDate}) and type = '${type}'`,
             )
         ).unsafeFetchRaw()
     }
@@ -50,9 +61,45 @@ export default function transactionViewModel(){
             .unsafeFetchRaw()
     }
 
+    const getTransactionByLimit = async(limit) => {
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
+        return await database.get('transactions').
+            query(Q.where('user_id', userId), Q.where('date', Q.between(last30day, currentDate)), Q.sortBy('date', Q.desc), Q.take(limit))
+            .unsafeFetchRaw()
+    }
+
+    const doUpdateTransaction = async(id, data, onSuccess, onError) => {
+        await database.write(async() => {
+            const transaction = await database.get('transactions').find(id)
+            await transaction.update(item => {
+                item.categoryId = data.categoryId
+                item.name = data.name
+                item.description = data.description
+                item.date = moment(data.date).unix()
+                item.amount = data.amount
+                item.type = data.type
+            }).then(() => {
+                onSuccess()
+            }).catch((error) => {
+                onError(error)
+            })
+        })
+    }
+
+    const doDeleteTransaction = async(id) => {
+        await database.write(async() => {
+            const transaction = await database.get('transactions').find(id)
+            await transaction.destroyPermanently()
+        })
+    }
+
     return{
         doCreateTransaction,
         getTransactionByType,
-        getTransactionSumByCategory
+        getTransactionSumByCategory,
+        getTransactionSumByType,
+        getTransactionByLimit,
+        doUpdateTransaction,
+        doDeleteTransaction,
     }
 }

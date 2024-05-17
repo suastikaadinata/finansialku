@@ -37,7 +37,7 @@ export default function useLoginViewController() {
 		await doLogin(data.username, data.password, (user: any) => {
 			console.log('user', user)
 			setIsLoadingForm(false)
-			onLoginDispatch(true, user.id)
+			onLoginDispatch(user.id)
 		}, (e: string) => {
 			setIsLoadingForm(false)
 			onError(e)

@@ -22,21 +22,26 @@
         "description": "Description",
         "category": "Category",
         "add_category": "Add Category",
-        "update_category": "Update Category",
+        "edit_category": "Edit Category",
         "add": "Add",
-        "update": "update",
+        "edit": "Edit",
         "add_transaction": "Add Transaction",
-        "update_transaction": "Update Transaction",
+        "edit_transaction": "Edit Transaction",
         "name_transaction": "Name Transaction",
         "type_transaction": "Type Transaction",
         "amount": "Amount",
-        "date_transaction": "Date Transaction"
+        "date_transaction": "Date Transaction",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "delete_transaction": "Delete Transaction",
+        "select_language": "Select Language"
     },
     "description": {
         "account_security": "Change your password",
         "language": "Set your account language",
         "category": "Add your category and maximum 8 categories for all transactions",
-        "max_category": "Maximum 8 categories"
+        "max_category": "Maximum 8 categories",
+        "delete_transaction": "Are you sure want to delete this transaction ?"
     },
     "placeholder": {
         "username": "Enter your username",
@@ -61,12 +66,20 @@
         "income": "Income",
         "spending": "Spending"
     },
+    "empty": {
+        "latest_transaction": "You haven't made any transactions yet.",
+        "chart": "No chart data available yet."
+    },
+    "language": {
+        "english": "English",
+        "indonesian": "Bahasa"
+    },
     "forgot_password": "Forgot password?",
     "tap_here": "Tap here.",
     "your_balance_this_month_is": "Your balance is",
     "your_monthly_budget": "Your Budget",
     "spend_minus_total": "You spend {{spend}} of total {{total}} in the last 30 days",
-    "latest_transaction": "Latest Transaction",
+    "latest_transaction": "Latest Transactions",
     "monthly_summary": "Last 30 Days Summary",
     "total_spending_a_month": "Total Spending",
     "total_income_a_month": "Total Income",

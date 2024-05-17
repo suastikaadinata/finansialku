@@ -12,13 +12,13 @@ import CustomButton from '../components/CustomButton';
 import { useTranslation } from 'react-i18next';
 import { NavigateProps } from '../entities/GlobalProps';
 import useAddTransactionController from '../view-controller/useAddTransactionController';
-import { FormProvider } from 'react-hook-form';
+import { FormProvider, set } from 'react-hook-form';
 import RHFTextField from '../components/hookforms/RHFTextField';
 import { SelectItemBottomSheet } from '../components/bottomsheets/SelectItemBottomSheet';
 import DatePicker from 'react-native-date-picker';
 
 export default function AddTransactionView({ navigation, route }: NavigateProps){
-    const { onGoBack } = route.params
+    const { onGoBack, isEdit, initialData } = route.params
     const { t } = useTranslation();
     const { 
         method, 
@@ -39,12 +39,14 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
         onOpenTypeTransactionBS, 
         fetchCategories,
         onSelectedCategory,
-        onSubmitTransaction
+        onSubmitTransaction,
+        setInitialFormData,
+        onSubmitUpdateTransaction
     } = useAddTransactionController()
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: t('title.add_transaction'),
+            headerTitle: isEdit ? t('title.edit_transaction') : t('title.add_transaction'),
             headerTitleAlign: 'center',
             headerStyle: {
                 backgroundColor: colors.neutral.neutral_10,
@@ -57,18 +59,41 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
         fetchCategories()
     }, [])
 
+    useEffect(() => {
+        if(categories.length > 0 && isEdit && initialData){
+            console.log("is edit", initialData)
+            setInitialFormData(initialData)
+        }
+    }, [categories, isEdit, initialData])
+
+    
+
     const onSubmitForm = async(data: any) => {
         Keyboard.dismiss();
-        await onSubmitTransaction({
-            name: data.name,
-            amount: data.amount,
-        }, 
-        () => {
-            console.log('success transaction')
-            onGoBack(selectedTypeTransaction.id)
-        }, (e: any) => {
-            console.log(e);
-        })
+        if(isEdit){
+            await onSubmitUpdateTransaction({
+                id: initialData.id,
+                name: data.name,
+                amount: data.amount,
+            }, 
+            () => {
+                console.log('success update transaction')
+                onGoBack(selectedTypeTransaction.id)
+            }, (e: any) => {
+                console.log(e);
+            })
+        }else{
+            await onSubmitTransaction({
+                name: data.name,
+                amount: data.amount,
+            }, 
+            () => {
+                console.log('success transaction')
+                onGoBack(selectedTypeTransaction.id)
+            }, (e: any) => {
+                console.log(e);
+            })
+        }
     }
 
     const FormView = () => {
@@ -88,6 +113,12 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
                     title={t('title.name_transaction')}
                     required
                     placeholder={t('placeholder.name_transaction')}
+                />
+                <RHFTextField 
+                    name="description"
+                    title={t('title.description')}
+                    required
+                    placeholder={t('placeholder.description')}
                 />
                 <RHFTextField 
                     name="amount"
@@ -152,7 +183,7 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
                 <FormView />
             </ScrollView>
             <Stack m={16}>
-                <CustomButton color={'primary'} title={t('title.add')} loading={isLoadingForm} onPress={method.handleSubmit(onSubmitForm, e => console.log(e))}/>
+                <CustomButton color={'primary'} title={isEdit ? t('title.edit') : t('title.add')} loading={isLoadingForm} onPress={method.handleSubmit(onSubmitForm, e => console.log(e))}/>
             </Stack>
         </Page>
     )
