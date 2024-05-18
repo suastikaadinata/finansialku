@@ -14,7 +14,6 @@ import { NavigateProps } from '../entities/GlobalProps';
 import useAddTransactionController from '../view-controller/useAddTransactionController';
 import { FormProvider, set } from 'react-hook-form';
 import RHFTextField from '../components/hookforms/RHFTextField';
-import { SelectItemBottomSheet } from '../components/bottomsheets/SelectItemBottomSheet';
 import DatePicker from 'react-native-date-picker';
 
 export default function AddTransactionView({ navigation, route }: NavigateProps){
@@ -23,12 +22,8 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
     const { 
         method, 
         date,
-        typeTransactionData,
-        typeTransactionRef,
         selectedTypeTransaction, 
         categories, 
-        selectCategoryRef, 
-        selectedCategory,
         isOpenDatePicker,
         isLoadingForm,
         onOpenDatePicker,
@@ -65,8 +60,6 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
             setInitialFormData(initialData)
         }
     }, [categories, isEdit, initialData])
-
-    
 
     const onSubmitForm = async(data: any) => {
         Keyboard.dismiss();
@@ -152,20 +145,6 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
 
     return(
         <Page bgColor={colors.neutral.neutral_10}>
-            <SelectItemBottomSheet  
-                ref={typeTransactionRef} 
-                height={190} 
-                title={t('placeholder.type_transaction')}
-                data={typeTransactionData} 
-                selectedItem={selectedTypeTransaction} 
-                onSelected={onSelectedTypeTransaction}/>
-            <SelectItemBottomSheet  
-                ref={selectCategoryRef} 
-                height={(75 + (50 * categories.length))} 
-                title={t('placeholder.category')}
-                data={categories} 
-                selectedItem={selectedCategory} 
-                onSelected={onSelectedCategory}/>
             <DatePicker
                 modal
                 open={isOpenDatePicker}

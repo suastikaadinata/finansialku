@@ -29,8 +29,8 @@ export const CategoryBottomSheet = forwardRef(({ isAdd, isEdit, initialData, onS
     const { t } = useTranslation();
     
     const schema = yup.object({
-		name: yup.string().required().label("Name"),
-		description: yup.string().label("Description").nullable(),
+		name: yup.string().required().label(t('title.name')),
+		description: yup.string().label(t('title.description')).nullable(),
 	}).required();
 	
 	const defaultValues = {

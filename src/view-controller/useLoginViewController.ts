@@ -7,18 +7,18 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import userViewModel from "../view-model/userViewModel";
-import { useDispatch } from "react-redux";
 import useGlobalDispatch from "../redux/useGlobalDispatch";
+import { useTranslation } from "react-i18next";
 
 export default function useLoginViewController() {
-	const dispatch = useDispatch();
+	const { t } = useTranslation();
 	const { doLogin } = userViewModel();
 	const { onLoginDispatch } = useGlobalDispatch();
 	const [isLoadingForm, setIsLoadingForm] = useState(false);
 
     const schema = yup.object({
-		username: yup.string().required().label("Username"),
-		password: yup.string().min(8).required().label("Password"),
+		username: yup.string().required().label(t('title.username')),
+		password: yup.string().min(8).required().label(t('title.password')),
 	}).required();
 	
 	const defaultValues = {

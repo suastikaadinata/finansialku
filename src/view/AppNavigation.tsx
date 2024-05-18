@@ -12,25 +12,28 @@ import RegisterView from './RegisterView';
 import MainView from './MainView';
 import CategoryView from './CategoryView';
 import AddTransactionView from './AddTransactionView';
+import EditAccountView from './EditAccountView';
+import { routingWithAuthentication, routingWithoutAuthentication } from '../data/Routers';
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigation(){
-    const isAuthentication = useAppSelector(state => state.authReducer.isAuthentication);
+    const isAuthentication = useAppSelector(state => state.accountReducer.isAuthentication);
 
     return(
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 { !isAuthentication ? 
                 <>
-                    <Stack.Screen name="Login" component={LoginView}/>
-                    <Stack.Screen name="Register" component={RegisterView}/>
+                    { routingWithoutAuthentication.map((item) => (
+                        <Stack.Screen name={item.name} component={item.page}/>
+                    )) }
                 </>
                 :
                 <>
-                    <Stack.Screen name="Main" component={MainView}/>
-                    <Stack.Screen name="Category" component={CategoryView} options={{ headerShown: true }}/>
-                    <Stack.Screen name="AddTransaction" component={AddTransactionView} options={{ headerShown: true }}/>
+                    { routingWithAuthentication.map((item) => (
+                        <Stack.Screen name={item.name} component={item.page} options={{ headerShown: item.isHeaderShown }}/>
+                    ))}
                 </> 
                 }
             </Stack.Navigator>

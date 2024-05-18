@@ -19,19 +19,25 @@ import useAccountViewController from '../view-controller/useAccountViewControlle
 import { useIsFocused } from '@react-navigation/native';
 import Constants from '../data/Constants';
 import moment from 'moment';
-import { SelectItemBottomSheet } from '../components/bottomsheets/SelectItemBottomSheet';
+import { NavigateProps } from '../entities/GlobalProps';
 
 interface Props{
     icon?: string;
     title?: string;
     desc?: string;
+    onPress?: () => void;
 }
 
-export default function AccountView(){
+export default function AccountView({ navigation }: NavigateProps){
     const { t } = useTranslation();
     const isFocused = useIsFocused();
     const { onLogoutDispatch } = useGlobalDispatch();
-    const { languageRef, languageData, userDetail, selectedLanguage, onOpenLanguageBS, onSelectedLanguage, fetchUserDetail } = useAccountViewController();
+    const { 
+        userDetail, 
+        selectedLanguage, 
+        onOpenLanguageBS, 
+        fetchUserDetail 
+    } = useAccountViewController();
 
     useEffect(() => { 
         if(isFocused) fetchUserDetail()
@@ -65,7 +71,7 @@ export default function AccountView(){
                             iconColor={colors.neutral.neutral_90}
                             size={24}
                             style={{ marginRight: -2 }}
-                            onPress={() => {}}
+                            onPress={() => navigation.navigate('EditAccount')}
                         />
                     </Stack>
                 </Stack>
@@ -73,9 +79,9 @@ export default function AccountView(){
         )
     }
 
-    const SettingItemView = ({ icon, title, desc }: Props) => {
+    const SettingItemView = ({ icon, title, desc, onPress }: Props) => {
         return(
-            <TouchableOpacity style={{ marginVertical: 8, flexDirection: 'row' }} delayPressIn={0} onPress={() => {}}>
+            <TouchableOpacity style={{ marginVertical: 8, flexDirection: 'row' }} delayPressIn={0} onPress={onPress}>
                 <MaterialCommunityIcons name={icon!} size={24} color={colors.neutral.neutral_90} style={{ alignSelf: 'center' }}/>
                 <Stack ml={8} style={{ flex: 1 }}>
                     <Typography textStyle={{ fontSize: 14, fontWeight: 700, color: colors.neutral.neutral_90 }}>{title}</Typography>
@@ -90,8 +96,8 @@ export default function AccountView(){
         return(
             <Surface elevation={4} style={{ borderRadius: 8, marginTop: 24, marginHorizontal: 16, padding: 16, backgroundColor: colors.neutral.neutral_10 }}>
                 <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }} viewStyle={{ marginBottom: 16 }}>{t('title.account_setting')}</Typography>
-                <SettingItemView icon='lock-outline' title={t('title.account_security')} desc={t('description.account_security')}/>
-                <SettingItemView icon='flag-outline' title={t('title.language')} desc={t('description.language')}/>
+                <SettingItemView icon='lock-outline' title={t('title.account_security')} desc={t('description.account_security')} onPress={() => navigation.navigate("EditPassword")}/>
+                <SettingItemView icon='flag-outline' title={t('title.language')} desc={t('description.language')} onPress={onOpenLanguageBS}/>
             </Surface>
         )
     }
@@ -110,13 +116,6 @@ export default function AccountView(){
 
     return(
         <Page>
-            <SelectItemBottomSheet  
-                ref={languageRef} 
-                height={190} 
-                title={t('title.select_language')}
-                data={languageData} 
-                selectedItem={selectedLanguage} 
-                onSelected={onSelectedLanguage}/>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <AccountInformationView />
                 <SettingView />

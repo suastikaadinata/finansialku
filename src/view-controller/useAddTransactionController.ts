@@ -2,7 +2,7 @@
  * Created by Suastika Adinata on Thu May 16 2024
  * Copyright (c) 2024 - Made with love
  */
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,13 +13,13 @@ import Constants from '../data/Constants';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { SelectItem } from '../entities/Select';
+import { useBottomSheet } from '../provider/BottomSheetProvider';
 
 export default function useAddTransactionController(){
+    const { showSelectBS, hideSelectBS } = useBottomSheet()
     const { getCategories } = categoriesViewModel();
     const { doCreateTransaction, doUpdateTransaction } = transactionViewModel();
     const { t } = useTranslation();
-    const typeTransactionRef = useRef()
-    const selectCategoryRef = useRef()
     const [isLoadingForm, setIsLoadingForm] = useState(false)
     const [categories, setCategories] = useState<CategoryItem[]>([])
     const [isOpenDatePicker, setIsOpenDatePicker] = useState(false)
@@ -32,12 +32,12 @@ export default function useAddTransactionController(){
     ]
 
     const schema = yup.object({
-		type: yup.string().required().label("Type"),
-		name: yup.string().required().label("Name"),
-        description: yup.string().label("Description").nullable(),
-        amount: yup.number().required().label("Amount"),
-        category: yup.string().required().label("Category"),
-        date: yup.string().required().label("Date")
+		type: yup.string().required().label(t('title.type_transaction')),
+		name: yup.string().required().label(t('title.name_transaction')),
+        description: yup.string().label(t('title.description')).nullable(),
+        amount: yup.number().required().label(t('title.amount')),
+        category: yup.string().required().label(t('title.category')),
+        date: yup.string().required().label(t('title.date_transaction'))
 	}).required();
 	
 	const defaultValues = {
@@ -68,12 +68,22 @@ export default function useAddTransactionController(){
         setDate(new Date(data.date * 1000))
     }
 
+    const onOpenSelectBottomSheet = (height: number, title: string, data: any[], selectItem: any, onSelect: (result: any) => void) => {
+        showSelectBS({
+            height,
+            title,
+            selectData: data,
+            selectedItem: selectItem,
+            onSelected: onSelect
+        })
+    }
+
     const onOpenTypeTransactionBS = () => {
-        typeTransactionRef?.current?.open();
+        onOpenSelectBottomSheet(190, t('placeholder.type_transaction'), typeTransactionData, selectedTypeTransaction, onSelectedTypeTransaction)
     }
 
     const onOpenSelectCategoryBS = () => {
-        selectCategoryRef?.current?.open();
+        onOpenSelectBottomSheet((75 + (50 * categories.length)), t('placeholder.category'), categories, selectedCategory, onSelectedCategory)
     }
 
     const fetchCategories = async() => {
@@ -84,13 +94,13 @@ export default function useAddTransactionController(){
     const onSelectedTypeTransaction = (item: SelectItem) => {
         setSelectedTypeTransaction(item)
         method.setValue('type', item.name)
-        typeTransactionRef?.current?.close();
+        hideSelectBS()
     }
 
     const onSelectedCategory = (item: CategoryItem) => {
         setSelectedCategory(item)
         method.setValue('category', item.name)
-        selectCategoryRef?.current?.close();
+        hideSelectBS()
     }
 
     const onOpenDatePicker = () => {
@@ -148,9 +158,7 @@ export default function useAddTransactionController(){
         typeTransactionData,
         categories,
         method,
-        typeTransactionRef,
         selectedTypeTransaction,
-        selectCategoryRef,
         selectedCategory,
         isOpenDatePicker,
         isLoadingForm,

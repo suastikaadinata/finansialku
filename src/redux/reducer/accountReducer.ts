@@ -3,15 +3,15 @@
  * Copyright (c) 2024 - Made with love
  */
 
-export type AuthState = {
+export type AccountState = {
 	isAuthentication: boolean;
 }
 
-const initialState: AuthState = {
+const initialState: AccountState = {
 	isAuthentication: false,
 }
 
-const authReducer = (state: AuthState = initialState, action: any) => {
+const accountReducer = (state: AccountState = initialState, action: any) => {
 	switch (action.type) {
 		case "IS_LOGIN":
 			return {
@@ -28,4 +28,4 @@ const authReducer = (state: AuthState = initialState, action: any) => {
 	}
 }
 
-export default authReducer
+export default accountReducer

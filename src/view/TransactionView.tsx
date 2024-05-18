@@ -3,10 +3,10 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React, { memo } from "react";
+import React, { useEffect } from "react";
 import Page from "../components/Page";
 import { colors } from "../styles/colors";
-import { Animated, FlatList, ScrollView, TouchableOpacity } from "react-native";
+import { FlatList, ScrollView, TouchableOpacity } from "react-native";
 import Stack from "../components/Stack";
 import Typography from "../components/Typography";
 import { Divider, IconButton, Surface } from "react-native-paper";
@@ -20,11 +20,7 @@ import { TransactionItem } from "../entities/Transaction";
 import moment from "moment";
 import { currencyFormat } from "../utils/Utilities";
 import { GraphItem } from "../entities/Graph";
-import Collapsible from "react-native-collapsible";
-import CustomButton from "../components/CustomButton";
 import { TransactionItemViewAnimated } from "../components/TransactionItemViewAnimated";
-import { DeleteConfirmationBottomSheet } from "../components/bottomsheets/DeleteConfirmationBottomSheet";
-import { on } from "@nozbe/watermelondb/QueryDescription";
 
 interface Props{
     isSelected?: boolean;
@@ -40,7 +36,6 @@ interface Props{
 export default function TransactionView({ navigation }: NavigateProps){
     const { t } = useTranslation();
     const { 
-        deleteConfirmationRef, 
         totalMoney, 
         pieData, 
         selectedType, 
@@ -48,11 +43,15 @@ export default function TransactionView({ navigation }: NavigateProps){
         transactionData, 
         onSelectedType, 
         onSelectedItem, 
-        onOpenDeleteConfirmationBS, 
-        onCloseDeleteConfirmationBS, 
         doHandlingOnGoBack, 
-        onDeleteTransaction 
+        fetchCategories,
+        onOpenDeleteConfirmation,
+        onGoAddTransactionPageHandling  
     } = useTransactionViewController();
+
+    useEffect(() => {
+        fetchCategories()
+    }, [])
 
     const HeaderView = () => {
         return(
@@ -70,7 +69,7 @@ export default function TransactionView({ navigation }: NavigateProps){
                         onPress={() => navigation.navigate('Category', {
                             onGoBack: () => {
                                 navigation.goBack()
-                                doHandlingOnGoBack(selectedType)
+                                doHandlingOnGoBack(selectedType, true)
                             }
                         })}
                     />
@@ -81,12 +80,16 @@ export default function TransactionView({ navigation }: NavigateProps){
                     icon="plus"
                     iconColor={colors.neutral.neutral_10}
                     size={20}
-                    onPress={() => navigation.navigate('AddTransaction', {
-                        onGoBack: (type: string) => {
-                            navigation.goBack()
-                            doHandlingOnGoBack(type)
-                        }
-                    })}
+                    onPress={() => {
+                        onGoAddTransactionPageHandling(() => {
+                            navigation.navigate('AddTransaction', {
+                                onGoBack: (type: string) => {
+                                    navigation.goBack()
+                                    doHandlingOnGoBack(type, false)
+                                }
+                            })
+                        })    
+                    }}
                 />
             </Stack>
         )
@@ -193,7 +196,7 @@ export default function TransactionView({ navigation }: NavigateProps){
                             isLast={index == (transactionData.length - 1)} 
                             transaction={item}
                             onPress={() => onSelectedItem(selectedItem == item.id ? '' : (item.id ?? ''))}
-                            onDelete={onOpenDeleteConfirmationBS}
+                            onDelete={onOpenDeleteConfirmation}
                             onEdit={() => navigation.navigate('AddTransaction', {
                                 onGoBack: (type: string) => {
                                     navigation.goBack()
@@ -212,14 +215,6 @@ export default function TransactionView({ navigation }: NavigateProps){
     return(
         <Page bgColor={colors.neutral.neutral_20}>
             <HeaderView />
-            <DeleteConfirmationBottomSheet 
-                ref={deleteConfirmationRef}
-                title={t('title.delete_transaction')}
-                description={t('description.delete_transaction')}
-                height={200}
-                onDelete={onDeleteTransaction}
-                onCancel={onCloseDeleteConfirmationBS}
-            />
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <IncomeSpendingTypeView />
                 <CategoryGraphView />

@@ -7,11 +7,15 @@ import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { colors } from './src/styles/colors';
+import './src/locales/locales';
 import i18n from './src/locales/locales';
 import { Provider } from 'react-redux';
 import { persistor, store } from './src/redux/store/store';
 import { PersistGate } from "redux-persist/integration/react";
 import AppNavigation from './src/view/AppNavigation';
+import { BottomSheetProvider } from './src/provider/BottomSheetProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from './src/data/Constants';
 
 const theme = createTheme({
   lightColors: {
@@ -29,7 +33,9 @@ const theme = createTheme({
 
 function App() {
   useEffect(() => {
-    i18n.changeLanguage('en');
+    AsyncStorage.getItem(Constants.USER_LANGUAGE).then((data) => {
+      i18n.changeLanguage(data ?? 'en');
+    })
   }, [])
 
   return (
@@ -37,7 +43,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <PersistGate persistor={persistor}>
-            <AppNavigation />
+            <BottomSheetProvider>
+              <AppNavigation />
+            </BottomSheetProvider>
           </PersistGate>
         </Provider>
       </ThemeProvider>

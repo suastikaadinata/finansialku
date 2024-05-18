@@ -9,7 +9,7 @@
         "fullname": "Fullname",
         "birthdate": "Birthdate",
         "gender": "Gender",
-        "password_confirmation": "Password confirmation",
+        "password_confirmation": "Confirm Password",
         "home": "Home",
         "transaction": "Transaction",
         "account": "Account",
@@ -34,14 +34,21 @@
         "delete": "Delete",
         "cancel": "Cancel",
         "delete_transaction": "Delete Transaction",
-        "select_language": "Select Language"
+        "select_language": "Select Language",
+        "oke_understand": "Okay, I Understand",
+        "edit_account": "Edit Account",
+        "edit_password": "Edit Password",
+        "old_password": "Old Password",
+        "new_password": "New Password",
+        "new_password_confirmation": "Confirm New Password"
     },
     "description": {
         "account_security": "Change your password",
         "language": "Set your account language",
         "category": "Add your category and maximum 8 categories for all transactions",
         "max_category": "Maximum 8 categories",
-        "delete_transaction": "Are you sure want to delete this transaction ?"
+        "delete_transaction": "Are you sure want to delete this transaction ?",
+        "category_empty": "Please add your categories first before add any transactions."
     },
     "placeholder": {
         "username": "Enter your username",
@@ -56,7 +63,10 @@
         "type_transaction": "Select your type transaction",
         "category": "Select your category",
         "amount": "Enter your amount",
-        "date_transaction": "Select your date transaction"
+        "date_transaction": "Select your date transaction",
+        "old_password": "Enter your old password",
+        "new_password": "Enter your new password",
+        "new_password_confirmation": "Enter your new password confirmation"
     },
     "gender": {
         "male": "Male",
@@ -68,16 +78,17 @@
     },
     "empty": {
         "latest_transaction": "You haven't made any transactions yet.",
-        "chart": "No chart data available yet."
+        "chart": "No chart data available yet.",
+        "category": "You haven't made any categories yet."
     },
     "language": {
         "english": "English",
         "indonesian": "Bahasa"
     },
-    "forgot_password": "Forgot password?",
+    "forgot_password": "Forgot password ?",
     "tap_here": "Tap here.",
     "your_balance_this_month_is": "Your balance is",
-    "your_monthly_budget": "Your Budget",
+    "your_monthly_budget": "Budget ",
     "spend_minus_total": "You spend {{spend}} of total {{total}} in the last 30 days",
     "latest_transaction": "Latest Transactions",
     "monthly_summary": "Last 30 Days Summary",

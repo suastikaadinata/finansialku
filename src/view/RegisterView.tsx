@@ -18,20 +18,15 @@ import { Surface, IconButton } from 'react-native-paper';
 import { NavigateProps } from '../entities/GlobalProps';
 import DatePicker from 'react-native-date-picker'
 import { useTranslation } from 'react-i18next';
-import { SelectItemBottomSheet } from '../components/bottomsheets/SelectItemBottomSheet';
 
 export default function RegisterView({ navigation }: NavigateProps){
     const { t } = useTranslation();
 
     const { 
-        genderRef,
-        genderData,
         isLoadingForm,
         birthdate, 
-        gender,
         isOpenBirtdatePicker, 
-        onOpenGendertPicker,
-        onSelectedGender,
+        onOpenGenderPicker,
         onChangeBirthdate,
         onOpenBirtdatePicker, 
         onCloseBirtdatePicker,
@@ -71,7 +66,7 @@ export default function RegisterView({ navigation }: NavigateProps){
                         required
                         disabled
                         isClickable
-                        onPress={() => onOpenGendertPicker()}
+                        onPress={() => onOpenGenderPicker()}
                         placeholder={t('placeholder.gender')}
                     />
                     <RHFTextField 
@@ -98,7 +93,7 @@ export default function RegisterView({ navigation }: NavigateProps){
     }
 
     return(
-        <Page bgColor='#ffffff'>
+        <Page bgColor={colors.neutral.neutral_10}>
             <DatePicker
                 modal
                 open={isOpenBirtdatePicker}
@@ -112,13 +107,6 @@ export default function RegisterView({ navigation }: NavigateProps){
                     onCloseBirtdatePicker()
                 }}
             />
-            <SelectItemBottomSheet  
-                ref={genderRef} 
-                height={190} 
-                title={t('select_gender')}
-                data={genderData} 
-                selectedItem={gender} 
-                onSelected={onSelectedGender}/>
             <Stack style={{ flex: 1 }}>
                 <Stack ml={8} mt={16}>
                     <IconButton
@@ -133,7 +121,7 @@ export default function RegisterView({ navigation }: NavigateProps){
                     {t('title.sign_up_your_account')}
                 </Typography>
                 <Stack style={{ flex: 1 }}>
-                    <ScrollView style={{ flexGrow: 1, padding: 16 }}>
+                    <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
                         <FormView />
                     </ScrollView>
                     <Surface elevation={4} style={{ padding: 16, backgroundColor: colors.neutral.neutral_10 }}>

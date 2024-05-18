@@ -1,29 +1,28 @@
 /*
- * Created by Suastika Adinata on Fri May 03 2024
+ * Created by Suastika Adinata on Sat May 18 2024
  * Copyright (c) 2024 - Made with love
  */
 
-import React, { useState } from "react"
-import { useForm } from "react-hook-form";
+import React, { useState } from "react";
+import { set, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import userViewModel from "../view-model/userViewModel";
-import moment from "moment";
-import useGlobalDispatch from "../redux/useGlobalDispatch";
+import { SelectItem } from "../entities/Select";
 import Constants from "../data/Constants";
 import { useTranslation } from "react-i18next";
-import { SelectItem } from "../entities/Select";
+import moment from "moment";
 import { useBottomSheet } from "../provider/BottomSheetProvider";
+import userViewModel from "../view-model/userViewModel";
+import { UserItem } from "../entities/User";
 
-export default function useRegisterViewController() {
+export default function useEditAccountViewController(){
     const { t } = useTranslation();
     const { showSelectBS, hideSelectBS } = useBottomSheet()
-    const { doCreateUser } = userViewModel();
-    const { onLoginDispatch } = useGlobalDispatch();
+    const { getUserDetail, doUpdateUser } = userViewModel();
+    const [gender, setSelectedGender] = useState<SelectItem>({} as SelectItem)
     const [birthdate, setBirthdate] = useState(new Date());
     const [isLoadingForm, setIsLoadingForm] = useState(false);
     const [isOpenBirtdatePicker, setIsOpenBirtdatePicker] = useState(false);
-    const [gender, setSelectedGender] = useState<SelectItem>({} as SelectItem)
     const genderData: SelectItem[] = [
         { id: Constants.GENDER.MALE, name: t("gender.male") },
         { id: Constants.GENDER.FEMALE, name: t("gender.female")}
@@ -34,8 +33,6 @@ export default function useRegisterViewController() {
         fullname: yup.string().required().label(t('title.fullname')),
         birthdate: yup.string().required().label(t('title.birthdate')),
         gender: yup.string().required().label(t('title.gender')),
-		password: yup.string().min(8).required().label(t('title.password')),
-        passwordConfirmation: yup.string().min(8).oneOf([yup.ref('password'),undefined], 'Passwords must match').required().label(t('title.password_confirmation')),
 	}).required();
 	
 	const defaultValues = {
@@ -43,8 +40,6 @@ export default function useRegisterViewController() {
         fullname: "",
         birthdate: "",
         gender: "",
-		password: "",
-        passwordConfirmation: ""
 	};
 	
 	const method = useForm({
@@ -52,17 +47,17 @@ export default function useRegisterViewController() {
 		resolver: yupResolver(schema),
 	});
 
-    const onChangeBirthdate = (date: Date) => {
-        method.setValue('birthdate', moment(date).format("DD MMMM YYYY"));
-        setBirthdate(date);
-    }
-
     const onOpenBirtdatePicker = () => {
         setIsOpenBirtdatePicker(true);
     }
 
     const onCloseBirtdatePicker = () => {
         setIsOpenBirtdatePicker(false);
+    }
+
+    const onChangeBirthdate = (date: Date) => {
+        method.setValue('birthdate', moment(date).format("DD MMMM YYYY"));
+        setBirthdate(date);
     }
 
     const onOpenGenderPicker = () => {
@@ -81,35 +76,44 @@ export default function useRegisterViewController() {
         hideSelectBS()
     }
 
-    const doRegister = async(data: any, onError: (e: string) => void) => {
+    const fetchUserDetail = async() => {
+        await getUserDetail().then((data: any) => {
+            console.log('user detail', data)
+            method.setValue('username', data.username)
+            method.setValue('fullname', data.fullname)
+            method.setValue('birthdate', moment.unix(data.birthdate).format("DD MMMM YYYY"))
+            const gender = genderData.find(item => item.id == data.gender) as SelectItem
+            method.setValue('gender', gender.name)
+            setSelectedGender(gender)
+            setBirthdate(new Date(data.birthdate * 1000))
+        })
+    }
+
+    const doSubmitFormUpdate = async(data: any, onSuccess: () => void, onError: (e: any) => void) => {
         setIsLoadingForm(true)
-        await doCreateUser({
+        await doUpdateUser({
             fullname: data.fullname,
             birthdate: `${birthdate}`,
-            gender: gender.id,
-            username: data.username,
-            password: data.password
-        }, (user: any) => {
-            setIsLoadingForm(false);
-            onLoginDispatch(user.id)
-        }, (e: string) => {
-            setIsLoadingForm(false);
+            gender: gender.id
+        }, () => {
+            setIsLoadingForm(false)
+            onSuccess()
+        }, (e: any) => {
+            setIsLoadingForm(false)
             onError(e)
-        });
+        })
     }
 
     return{
-        genderData,
+        method,
         isLoadingForm,
-        gender,
         birthdate,
         isOpenBirtdatePicker,
-        onOpenGenderPicker,
-        onSelectedGender,
-        onChangeBirthdate,
         onOpenBirtdatePicker,
         onCloseBirtdatePicker,
-        method,
-        doRegister    
+        onChangeBirthdate,
+        onOpenGenderPicker,
+        fetchUserDetail,
+        doSubmitFormUpdate
     }
 }

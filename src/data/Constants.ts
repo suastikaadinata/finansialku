@@ -5,6 +5,7 @@
 
 export default {
     USER_ID: 'user_id',
+    USER_LANGUAGE: 'user_language',
 
     GENDER: {
         MALE: "male",
@@ -19,5 +20,11 @@ export default {
     LANGUAGE: {
         ENGLISH: "en",
         INDONESIAN: "id"
+    },
+
+    BOTTOM_SHEET: {
+        DELETE: "delete",
+        SELECT: "select",
+        ALERT: "alert"
     }
 }

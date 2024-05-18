@@ -50,6 +50,42 @@ export default function userViewModel(){
         } 
     }
 
+    const doUpdateUser = async (data, onSuccess, onError) => {
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
+        await database.write(async() => {
+            const user = await database.get('users').find(userId)
+            await user.update(item => {
+                item.fullname = data.fullname
+                item.gender = data.gender
+                item.birthdate = moment(data.birthdate).unix()
+            }).then(() => {
+                onSuccess()
+            }).catch((error) => {
+                onError(error)
+            })
+        })
+    }
+
+    const doUpdatePassword = async (data, onSuccess, onError) => {
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
+        const user = await database.get('users').find(userId)
+        const comparePassword = await deComparePassword(data.oldPassword, user._raw.password)
+        if(comparePassword){
+            const hashPassword = await doHashPassword(data.newPassword)
+            await database.write(async() => {
+                await user.update(item => {
+                    item.password = hashPassword
+                }).then(() => {
+                    onSuccess()
+                }).catch((error) => {
+                    onError(error)
+                })
+            })
+        }else{
+            onError("Old password is wrong")
+        }
+    }
+
     const getUserDetail = async() => {
         const userId = await AsyncStorage.getItem(Constants.USER_ID)
         const user = await database.get('users').find(userId)
@@ -75,6 +111,8 @@ export default function userViewModel(){
     return{
         doCreateUser,
         getUserDetail,
-        doLogin
+        doLogin,
+        doUpdateUser,
+        doUpdatePassword
     }
 }

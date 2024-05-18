@@ -4,17 +4,22 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
-import { Animated, Easing } from "react-native";
-import { colors } from "../styles/colors";
 import transactionViewModel from "../view-model/transactionViewModel";
+import categoriesViewModel from "../view-model/categoriesViewModel";
 import { TransactionItem } from "../entities/Transaction";
 import { GraphItem } from "../entities/Graph";
 import { graphColor } from "../data/graphColor";
+import { useBottomSheet } from "../provider/BottomSheetProvider";
+import { useTranslation } from "react-i18next";
+import { CategoryItem } from "../entities/Category";
 
 export default function useTransactionViewController(){
-    const deleteConfirmationRef = useRef()
+    const { t } = useTranslation();
+    const { showDeleteBS, hideDeleteBS, showAlertBS, hideAlertBS } = useBottomSheet()
     const { getTransactionByType, getTransactionSumByCategory, doDeleteTransaction } = transactionViewModel();
+    const { getCategories } = categoriesViewModel();
     const [transactionData, setTransactionData] = useState<TransactionItem[]>([])
+    const [categories, setCategories] = useState<CategoryItem[]>([])
     const [pieData, setPieData] = useState<GraphItem[]>([])
     const [totalMoney, setTotalMoney] = useState(0)
     const [selectedItem, setSelectedItem] = useState('')
@@ -38,6 +43,11 @@ export default function useTransactionViewController(){
         })
     }
 
+    const fetchCategories = async() => {
+        const data = await getCategories()
+        setCategories(data)
+    }
+
     useEffect(() => {
         doGetTransactionByType(selectedType)
     }, [selectedType])
@@ -50,33 +60,50 @@ export default function useTransactionViewController(){
         setSelectedItem(id)
     }
 
-    const onOpenDeleteConfirmationBS = () => {
-        deleteConfirmationRef?.current?.open()
-    }
-
-    const onCloseDeleteConfirmationBS = () => {
-        deleteConfirmationRef?.current?.close()
-    }
-
-    const doHandlingOnGoBack = (type: string) => {
+    const doHandlingOnGoBack = (type: string, isCategory: boolean) => {
         if(type == selectedType){
             doGetTransactionByType(type)
         }else{
             onSelectedType(type)
         }
 
+        if(isCategory){
+            fetchCategories()
+        }
         onSelectedItem('')
+    }
+
+    const onOpenDeleteConfirmation = () => {
+        showDeleteBS({
+            title: t('title.delete_transaction'),
+            description: t('description.delete_transaction'),
+            height: 200,
+            onSubmit: () => onDeleteTransaction(),
+            onCancel: () => hideDeleteBS()
+        })
     }
 
     const onDeleteTransaction = async() => {
         await doDeleteTransaction(selectedItem).then(() => {
             doGetTransactionByType(selectedType)
-            onCloseDeleteConfirmationBS()
+            hideDeleteBS()
         })
     }
 
+    const onGoAddTransactionPageHandling = (onGoNext: () => void) => {
+        if(categories.length > 0){
+            onGoNext()
+        }else{
+            showAlertBS({
+                title: t('empty.category'),
+                description: t('description.category_empty'),
+                height: 200,
+                onSubmit: () => hideAlertBS()
+            })
+        }
+    }
+
     return{
-        deleteConfirmationRef,
         pieData,
         transactionData,
         totalMoney,
@@ -85,9 +112,10 @@ export default function useTransactionViewController(){
         onSelectedType,
         onSelectedItem,
         doGetTransactionByType,
-        onOpenDeleteConfirmationBS,
-        onCloseDeleteConfirmationBS,
+        fetchCategories,
         doHandlingOnGoBack,
-        onDeleteTransaction
+        onOpenDeleteConfirmation,
+        onDeleteTransaction,
+        onGoAddTransactionPageHandling
     }
 }
