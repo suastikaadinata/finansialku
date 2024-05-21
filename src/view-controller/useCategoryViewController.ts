@@ -11,7 +11,6 @@ export default function useCategoryViewController(){
     const { getCategories, doCreateCategories, doUpdateCategories } = categoriesViewModel();
     const [categories, setCategories] = useState<CategoryItem[]>([])
     const [isEdit, setIsEdit] = useState(false)
-    const [isUpdate, setIsUpdate] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState<CategoryItem>({} as CategoryItem)
     const categoryRef = useRef()
 
@@ -19,12 +18,13 @@ export default function useCategoryViewController(){
         categoryRef?.current?.open();
     }
 
-    const onCreateCategories = async(name: string, description: string | null) => {
-        await doCreateCategories(name, description, (newData: any) => {
+    const onCreateCategories = async(name: string, budget: number) => {
+        await doCreateCategories(name, budget, (newData: any) => {
             console.log('newData', newData)
             categoryRef?.current?.close();
             fetchCategories()
         }, (e: any) => {
+            categoryRef?.current?.close();
             console.log('e', e)
         });
     }
@@ -39,13 +39,12 @@ export default function useCategoryViewController(){
         onOpenCategoryBS()
     }
 
-    const onUpdateCategories = async(name: string, description: string | null) => {
-        await doUpdateCategories(selectedCategory.id, name, description, () => {
-            setIsUpdate(true)
+    const onUpdateCategories = async(name: string, budget: number) => {
+        await doUpdateCategories(selectedCategory.id, name, budget, () => {
             categoryRef?.current?.close();
             fetchCategories()
-        }, (e: any) => {
-            console.log('e', e)
+        }, () => {
+            categoryRef?.current?.close();
         });
     }
 
@@ -59,7 +58,6 @@ export default function useCategoryViewController(){
         categoryRef,
         selectedCategory,
         isEdit,
-        isUpdate,
         doDisableEdit,
         onSelectedCategory,
         onOpenCategoryBS,

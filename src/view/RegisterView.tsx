@@ -36,9 +36,7 @@ export default function RegisterView({ navigation }: NavigateProps){
 
     const doSubmitForm = async(data: any) => {
         Keyboard.dismiss();
-        await doRegister(data, (e: string) => {
-            console.log(e);
-        })
+        await doRegister(data)
     }
 
     const FormView = () => {

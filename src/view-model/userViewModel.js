@@ -9,8 +9,13 @@ import moment from "moment";
 import { Q } from '@nozbe/watermelondb'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "../data/Constants";
+import { useBottomSheet } from "../provider/BottomSheetProvider";
+import { useTranslation } from "react-i18next";
 
 export default function userViewModel(){
+    const { t } = useTranslation()
+    const { showErrorBS } = useBottomSheet()
+
     const doHashPassword = async (password) => {
         return await sha256(password).then( hash => {
             return hash
@@ -43,10 +48,16 @@ export default function userViewModel(){
                     onSuccess(newUser._raw)
                 }).catch((error) => {
                     console.log(error)
+                    showErrorBS({ errorCode: 500 })
+                    onError()
                 })
             })
         }else{
-            onError("Username already exist")
+            showErrorBS({
+                title: t("error.title.username_has_been_taken"),
+                description: t("error.description.username_has_been_taken")
+            })
+            onError()
         } 
     }
 
@@ -61,7 +72,9 @@ export default function userViewModel(){
             }).then(() => {
                 onSuccess()
             }).catch((error) => {
-                onError(error)
+                console.log(error)
+                showErrorBS({ errorCode: 500 })
+                onError()
             })
         })
     }
@@ -78,11 +91,17 @@ export default function userViewModel(){
                 }).then(() => {
                     onSuccess()
                 }).catch((error) => {
-                    onError(error)
+                    console.log(error)
+                    showErrorBS({ errorCode: 500 })
+                    onError()
                 })
             })
         }else{
-            onError("Old password is wrong")
+            showErrorBS({
+                title: t("error.title.old_password_incorrect"),
+                description: t("error.description.old_password_incorrect")
+            })
+            onError()
         }
     }
 
@@ -100,11 +119,19 @@ export default function userViewModel(){
                 if(res){
                     onSuccess(user[0]._raw)
                 }else{
-                    onError("Username or password is wrong")
+                    showErrorBS({
+                        title: t("error.title.username_or_password_incorrect"),
+                        description: t("error.description.username_or_password_incorrect")
+                    })
+                    onError()
                 }
             })
         }else{
-            onError("User not found")
+            showErrorBS({
+                title: t("error.title.username_or_password_incorrect"),
+                description: t("error.description.username_or_password_incorrect")
+            })
+            onError()
         }
     }
 

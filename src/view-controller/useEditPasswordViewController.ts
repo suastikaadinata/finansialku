@@ -32,7 +32,7 @@ export default function useEditPasswordViewController() {
 		resolver: yupResolver(schema),
 	});
 
-    const onSubmitFormUpdate = async(data: any, onSuccess: () => void, onError: (e: any) => void) => {
+    const onSubmitFormUpdate = async(data: any, onSuccess: () => void) => {
         setIsLoadingForm(true)
         await doUpdatePassword({
             oldPassword: data.oldPassword,
@@ -40,10 +40,8 @@ export default function useEditPasswordViewController() {
         }, () => {
             setIsLoadingForm(false)
             onSuccess()
-        }, (e: any) => {
+        }, () => {
             setIsLoadingForm(false)
-            console.log(e)
-            onError(e)
         })
     }
 

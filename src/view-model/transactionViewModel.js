@@ -8,8 +8,10 @@ import { database } from "../database/database"
 import Constants from "../data/Constants"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Q } from "@nozbe/watermelondb"
+import { useBottomSheet } from "../provider/BottomSheetProvider"
 
 export default function transactionViewModel(){
+    const { showErrorBS } = useBottomSheet()
     const last30day = moment().subtract(30, 'days').unix()
     const currentDate = moment().unix()
 
@@ -28,7 +30,9 @@ export default function transactionViewModel(){
                 console.log('new transaction', newData._raw)
                 onSuccess()
             }).catch((error) => {
-                onError(error)
+                console.log(error)
+                showErrorBS({ errorCode: 500 })
+                onError()
             })
         })
     }
@@ -81,7 +85,9 @@ export default function transactionViewModel(){
             }).then(() => {
                 onSuccess()
             }).catch((error) => {
-                onError(error)
+                console.log(error)
+                showErrorBS({ errorCode: 500 })
+                onError()
             })
         })
     }
@@ -90,6 +96,9 @@ export default function transactionViewModel(){
         await database.write(async() => {
             const transaction = await database.get('transactions').find(id)
             await transaction.destroyPermanently()
+        }).catch((error) => {
+            console.log(error)
+            showErrorBS({ errorCode: 500 })
         })
     }
 

@@ -81,7 +81,7 @@ export default function useRegisterViewController() {
         hideSelectBS()
     }
 
-    const doRegister = async(data: any, onError: (e: string) => void) => {
+    const doRegister = async(data: any) => {
         setIsLoadingForm(true)
         await doCreateUser({
             fullname: data.fullname,
@@ -92,9 +92,8 @@ export default function useRegisterViewController() {
         }, (user: any) => {
             setIsLoadingForm(false);
             onLoginDispatch(user.id)
-        }, (e: string) => {
+        }, () => {
             setIsLoadingForm(false);
-            onError(e)
         });
     }
 

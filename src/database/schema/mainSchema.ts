@@ -7,13 +7,11 @@ import { appSchema } from '@nozbe/watermelondb'
 import { usersSchema } from './usersSchema'
 import { categorieschema } from './categoriesSchema'
 import { transactionsSchema } from './transactionsSchema'
-import { budgetsSschema } from './budgetsSchema'
 
 export const mainSchema = appSchema({
   version: 1,
   tables: [
     usersSchema,
-    budgetsSschema,
     categorieschema,
     transactionsSchema
   ]

@@ -7,7 +7,6 @@ import { Database } from '@nozbe/watermelondb'
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite'
 import { mainSchema } from './schema/mainSchema'
 import UserModel from './model/UserModel'
-import BudgetModel from './model/BudgetModel'
 import CategoriesModel from './model/CategoriesModel'
 import TransactionModel from './model/TransactionModel'
 
@@ -23,7 +22,6 @@ export const database = new Database({
     adapter,
     modelClasses: [
         UserModel,
-        BudgetModel,
         CategoriesModel,
         TransactionModel
     ],

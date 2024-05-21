@@ -24,9 +24,7 @@ export default function LoginView({ navigation }: NavigateProps){
 
     const doSubmitForm = async(data: any) => {
         Keyboard.dismiss();
-        await doSubmitLogin(data, (e) => {
-            console.log(e)
-        })
+        await doSubmitLogin(data)
     }
 
     const FormView = () => {

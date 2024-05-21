@@ -21,6 +21,7 @@ import moment from "moment";
 import { currencyFormat } from "../utils/Utilities";
 import { GraphItem } from "../entities/Graph";
 import { TransactionItemViewAnimated } from "../components/TransactionItemViewAnimated";
+import { useIsFocused } from "@react-navigation/native";
 
 interface Props{
     isSelected?: boolean;
@@ -35,6 +36,7 @@ interface Props{
 
 export default function TransactionView({ navigation }: NavigateProps){
     const { t } = useTranslation();
+    const isFocused = useIsFocused();
     const { 
         totalMoney, 
         pieData, 
@@ -50,30 +52,17 @@ export default function TransactionView({ navigation }: NavigateProps){
     } = useTransactionViewController();
 
     useEffect(() => {
-        fetchCategories()
-    }, [])
+        if(isFocused){
+            fetchCategories()
+        }
+    }, [isFocused])
 
     const HeaderView = () => {
         return(
             <Stack direction="row" p={16}>
-                <Typography textStyle={{ flex: 1, fontWeight: 700, color: colors.neutral.neutral_90, fontSize: 22 }} viewStyle={{ alignSelf: 'center' }}>
+                <Typography textStyle={{ flex: 1, fontWeight: 700, color: colors.neutral.neutral_90, fontSize: 22, marginRight: 4 }} viewStyle={{ alignSelf: 'center' }}>
                     {t('title.transaction')}
                 </Typography>
-                <Stack ml={4} mr={4}>
-                    <IconButton 
-                        mode="outlined"
-                        icon="view-grid"
-                        style={{ borderColor: colors.primary.main }}
-                        iconColor={colors.primary.main}
-                        size={20}
-                        onPress={() => navigation.navigate('Category', {
-                            onGoBack: () => {
-                                navigation.goBack()
-                                doHandlingOnGoBack(selectedType, true)
-                            }
-                        })}
-                    />
-                </Stack>
                 <IconButton 
                     mode="contained"
                     containerColor={colors.primary.main}

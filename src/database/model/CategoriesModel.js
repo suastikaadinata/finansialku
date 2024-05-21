@@ -18,6 +18,6 @@ export default class CategoriesModel extends Model {
   
   @field('user_id') userId
   @field('name') name
-  @field('description') description
+  @field('budget') budget
   @date('created_at') createdAt
 }

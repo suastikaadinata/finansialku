@@ -89,7 +89,7 @@ export default function useEditAccountViewController(){
         })
     }
 
-    const doSubmitFormUpdate = async(data: any, onSuccess: () => void, onError: (e: any) => void) => {
+    const doSubmitFormUpdate = async(data: any, onSuccess: () => void) => {
         setIsLoadingForm(true)
         await doUpdateUser({
             fullname: data.fullname,
@@ -98,9 +98,8 @@ export default function useEditAccountViewController(){
         }, () => {
             setIsLoadingForm(false)
             onSuccess()
-        }, (e: any) => {
+        }, () => {
             setIsLoadingForm(false)
-            onError(e)
         })
     }
 

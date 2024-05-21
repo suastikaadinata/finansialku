@@ -8,7 +8,7 @@ export interface CategoryItem{
     _status?: string;
     created_at?: number;
     name: string;
-    description: string | null;
+    budget: number;
     id?: string;
     user_id?: string;
 }

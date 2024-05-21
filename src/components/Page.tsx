@@ -28,52 +28,20 @@ export default function Page({
   bgColor,
   styles,
 }: Props) {
-  const CStatusBar = ({backgroundColor, ...props}: any) => (
-    <>
-      {Platform.OS === 'ios' ? (
-        <View
-          style={[
-            {
-              height: getStatusBarHeight(),
-            },
-            {backgroundColor},
-          ]}>
-          <SafeAreaView>
-            <StatusBar
-              translucent
-              backgroundColor={backgroundColor}
-              barStyle={'light-content'}
-              {...props}
-            />
-          </SafeAreaView>
-        </View>
-      ) : (
-        <StatusBar
-          backgroundColor={backgroundColor}
-          barStyle={'light-content'}
-          {...props}
-        />
-      )}
-    </>
-  );
 
   return (
-    <>
-      <CStatusBar/>
-
-      <SafeAreaView
-        style={[{flex: 1}, bgColor ? {backgroundColor: bgColor} : {}, styles]}>
-        {Platform.OS === 'ios' ? (
-          <KeyboardAvoidingView
-            keyboardVerticalOffset={getStatusBarHeight()}
-            behavior={'padding'}
-            style={{flex: 1}}>
-            {children}
-          </KeyboardAvoidingView>
-        ) : (
-          <>{children}</>
-        )}
-      </SafeAreaView>
-    </>
+    <SafeAreaView
+      style={[{flex: 1}, bgColor ? {backgroundColor: bgColor} : {}, styles]}>
+      {Platform.OS === 'ios' ? (
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={getStatusBarHeight()}
+          behavior={'padding'}
+          style={{flex: 1}}>
+          {children}
+        </KeyboardAvoidingView>
+      ) : (
+        <>{children}</>
+      )}
+    </SafeAreaView>
   );
 }

@@ -18,7 +18,7 @@ export const routingWithoutAuthentication: RouterItem[] = [
 
 export const routingWithAuthentication: RouterItem[] = [
     { name: "Main", page: MainView, isHeaderShown: false }, 
-    { name: "Category", page: CategoryView, isHeaderShown: true }, 
+    // { name: "Category", page: CategoryView, isHeaderShown: true }, 
     { name: "AddTransaction", page: AddTransactionView, isHeaderShown: true }, 
     { name: "EditAccount", page: EditAccountView, isHeaderShown: true }, 
     { name: "EditPassword", page: EditPasswordView, isHeaderShown: true }

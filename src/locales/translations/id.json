@@ -40,7 +40,9 @@
         "edit_password": "Ubah Kata Sandi",
         "old_password": "Kata Sandi Lama",
         "new_password": "Kata Sandi Baru",
-        "new_password_confirmation": "Konfirmasi Kata Sandi Baru"
+        "new_password_confirmation": "Konfirmasi Kata Sandi Baru",
+        "close": "Tutup",
+        "budget": "Anggaran"
     },
     "description": {
         "account_security": "Atur kata sandi akunmu",
@@ -66,7 +68,8 @@
         "date_transaction": "Pilih tanggal transaksi",
         "old_password": "Masukkan kata sandi lama",
         "new_password": "Masukkan kata sandi baru",
-        "new_password_confirmation": "Masukkan konfirmasi kata sandi baru"
+        "new_password_confirmation": "Masukkan konfirmasi kata sandi baru",
+        "budget": "Masukkan jumlah anggaran"
     },
     "gender": {
         "male": "Laki-laki",

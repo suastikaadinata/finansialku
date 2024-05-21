@@ -117,7 +117,7 @@ export default function useAddTransactionController(){
         onCloseDatePicker()
     }
 
-    const onSubmitTransaction = async(data: any, onSuccess: () => void, onError: (e: any) => void) => {
+    const onSubmitTransaction = async(data: any, onSuccess: () => void) => {
         setIsLoadingForm(true)
         await doCreateTransaction({
             type: selectedTypeTransaction.id,
@@ -129,13 +129,12 @@ export default function useAddTransactionController(){
         }, () => {
             setIsLoadingForm(false)
             onSuccess()
-        }, (e: any) => {
+        }, () => {
             setIsLoadingForm(false)
-            onError(e)
         })
     }
 
-    const onSubmitUpdateTransaction = async(data: any, onSuccess: () => void, onError: (e: any) => void) => {
+    const onSubmitUpdateTransaction = async(data: any, onSuccess: () => void) => {
         setIsLoadingForm(true)
         await doUpdateTransaction(data.id, {
             type: selectedTypeTransaction.id,
@@ -149,7 +148,6 @@ export default function useAddTransactionController(){
             onSuccess()
         }, (e: any) => {
             setIsLoadingForm(false)
-            onError(e)
         })
     }
 

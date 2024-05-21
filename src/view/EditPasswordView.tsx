@@ -35,8 +35,6 @@ export default function EditPasswordView({ navigation }: NavigateProps){
         Keyboard.dismiss();
         await onSubmitFormUpdate(data, () => {
             navigation.goBack()
-        }, (e: any) => {
-            console.log(e)
         })
     } 
 

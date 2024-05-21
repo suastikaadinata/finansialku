@@ -50,12 +50,7 @@ export default function EditAccountView({ navigation }: NavigateProps){
 
     const doSubmitForm = async(data: any) => {
         Keyboard.dismiss();
-        await doSubmitFormUpdate(data, 
-            () => { navigation.goBack() },
-            (e: string) => {
-                console.log(e);
-            }
-        )
+        await doSubmitFormUpdate(data, () => { navigation.goBack() })
     }
 
     const FormView = () =>{

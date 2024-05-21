@@ -72,8 +72,6 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
             () => {
                 console.log('success update transaction')
                 onGoBack(selectedTypeTransaction.id)
-            }, (e: any) => {
-                console.log(e);
             })
         }else{
             await onSubmitTransaction({
@@ -83,8 +81,6 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
             () => {
                 console.log('success transaction')
                 onGoBack(selectedTypeTransaction.id)
-            }, (e: any) => {
-                console.log(e);
             })
         }
     }

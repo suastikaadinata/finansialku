@@ -14,6 +14,7 @@ import TransactionView from "./TransactionView";
 import HomeView from "./HomeView";
 import AccountView from "./AccountView";
 import { useTranslation } from "react-i18next";
+import CategoryView from "./CategoryView";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,6 +38,17 @@ export default function MainView(){
               tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="chart-arc" color={color} size={28} />
+              ),
+            }}
+          />
+           <Tab.Screen
+            name="Category"
+            component={CategoryView}
+            options={{
+              tabBarLabel: t('title.category'),
+              tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="view-grid" color={color} size={28} />
               ),
             }}
           />
@@ -77,6 +89,17 @@ export default function MainView(){
                       </Stack>  
                     </Stack>      
                 </Stack>
+              ),
+            }}
+          />
+           <Tab.Screen
+            name="Insight"
+            component={TransactionView}
+            options={{
+              tabBarLabel: 'Insight',
+              tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="lightbulb-outline" color={color} size={28} />
               ),
             }}
           />

@@ -8,8 +8,11 @@ import { database } from "../database/database"
 import Constants from "../data/Constants"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Q } from "@nozbe/watermelondb"
+import { useBottomSheet } from "../provider/BottomSheetProvider"
 
 export default function categoriesViewModel(){
+    const { showErrorBS } = useBottomSheet() 
+
     const getCategories = async() => {
         const userId = await AsyncStorage.getItem(Constants.USER_ID)
         return await database.get('categories').query(
@@ -17,31 +20,35 @@ export default function categoriesViewModel(){
         ).unsafeFetchRaw()  
     }
 
-    const doCreateCategories = async (name, description, onSuccess, onError) => {
+    const doCreateCategories = async (name, budget, onSuccess, onError) => {
         const userId = await AsyncStorage.getItem(Constants.USER_ID)
         await database.write(async() => {
             await database.get('categories').create(categories => {
                 categories.name = name
-                categories.description = description
+                categories.budget = budget
                 categories.userId = userId
             }).then((newData) => {
                 onSuccess(newData._raw)
             }).catch((error) => {
-                onError(error)
+                console.log(error)
+                showErrorBS({ errorCode: 500 })
+                onError()
             })
         })
     }
 
-    const doUpdateCategories = async(id, name, description, onSuccess, onError) => {
+    const doUpdateCategories = async(id, name, budget, onSuccess, onError) => {
         await database.write(async() => {
             const categories = await database.get('categories').find(id)
             await categories.update(item => {
                 item.name = name
-                item.description = description
+                item.budget = budget
             }).then(() => {
                 onSuccess()
             }).catch((error) => {
-                onError(error)
+                console.log(error)
+                showErrorBS({ errorCode: 500 })
+                onError()
             })
         })
     }

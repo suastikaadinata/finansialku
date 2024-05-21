@@ -31,16 +31,15 @@ export default function useLoginViewController() {
 		resolver: yupResolver(schema),
 	});
 
-	const doSubmitLogin = async(data: any, onError: (e: string) => void) => {
+	const doSubmitLogin = async(data: any) => {
 		console.log("data", data)
 		setIsLoadingForm(true)
 		await doLogin(data.username, data.password, (user: any) => {
 			console.log('user', user)
 			setIsLoadingForm(false)
 			onLoginDispatch(user.id)
-		}, (e: string) => {
+		}, () => {
 			setIsLoadingForm(false)
-			onError(e)
 		})
 	}
 

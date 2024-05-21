@@ -9,6 +9,7 @@ import { SelectItem } from "../entities/Select";
 import { SelectItemBottomSheet } from "../components/bottomsheets/SelectItemBottomSheet";
 import { AlertBottomSheet } from "../components/bottomsheets/AlertBottomSheet";
 import Constants from "../data/Constants";
+import { useTranslation } from "react-i18next";
 
 type BottomSheetContextProps = {
     title?: string;
@@ -16,7 +17,10 @@ type BottomSheetContextProps = {
     height?: number;
     selectData?: any[];
     selectedItem?: any;
+    errorCode?: number;
     type?: string;
+    color?: string;
+    btnTitle?: string;
     onSelected?: (value: any) => void;
 	onCancel?: () => void;
 	onSubmit?: () => void;
@@ -29,6 +33,7 @@ type BottomSheetContextType = {
     hideSelectBS: () => void;
     showAlertBS: ({ ...props }: BottomSheetContextProps) => void;
     hideAlertBS: () => void;
+    showErrorBS: ({ ...props }: BottomSheetContextProps) => void;
 }
 
 const initialState: BottomSheetContextType = {
@@ -37,7 +42,8 @@ const initialState: BottomSheetContextType = {
     showSelectBS: () => {},
     hideSelectBS: () => {},
     showAlertBS: () => {},
-    hideAlertBS: () => {}
+    hideAlertBS: () => {},
+    showErrorBS: () => {}
 }
 
 const BottomSheetContext = createContext<BottomSheetContextType>(initialState);
@@ -47,6 +53,7 @@ export const BottomSheetProvider = ({ children }: { children: React.ReactNode })
     const deleteRef = useRef()
     const selectRef = useRef()
     const alertRef = useRef()
+    const { t } = useTranslation();
     const [bottomSheetProps, setBottomSheetProps] = useState<BottomSheetContextProps>({})
 
     useEffect(() => {
@@ -59,6 +66,7 @@ export const BottomSheetProvider = ({ children }: { children: React.ReactNode })
                     selectRef?.current?.open()
                     break;
                 case Constants.BOTTOM_SHEET.ALERT:
+                    console.log("alert", bottomSheetProps)
                     alertRef?.current?.open()
                     break;
             }
@@ -89,6 +97,18 @@ export const BottomSheetProvider = ({ children }: { children: React.ReactNode })
         alertRef?.current?.close()
     }
 
+    const showErrorBS = ({ ...props }: BottomSheetContextProps) => {
+        setBottomSheetProps({ 
+            title: (props.errorCode && props.errorCode == 500) ? t("error.title.internal_server_error") : props.title,
+            description: (props.errorCode && props.errorCode == 500) ? t("error.description.internal_server_error") : props.description,
+            color: 'error',
+            height: 200,
+            type: Constants.BOTTOM_SHEET.ALERT, 
+            btnTitle: t("title.close"),
+            onSubmit: () => hideAlertBS(),
+            ...props })
+    }
+
     const renderComponent = () => {
         return <>
             <DeleteConfirmationBottomSheet 
@@ -112,13 +132,15 @@ export const BottomSheetProvider = ({ children }: { children: React.ReactNode })
                 title={bottomSheetProps.title}
                 description={bottomSheetProps.description}
                 height={bottomSheetProps.height ?? 0}
+                color={bottomSheetProps.color}
+                btnTitle={bottomSheetProps.btnTitle}
                 onSubmit={bottomSheetProps.onSubmit}
             />
         </>
     }
 
     return (
-        <BottomSheetContext.Provider value={{ showDeleteBS, hideDeleteBS, showSelectBS, hideSelectBS, showAlertBS, hideAlertBS }}>
+        <BottomSheetContext.Provider value={{ showDeleteBS, hideDeleteBS, showSelectBS, hideSelectBS, showAlertBS, hideAlertBS, showErrorBS }}>
             {renderComponent()}
             {children}
         </BottomSheetContext.Provider>

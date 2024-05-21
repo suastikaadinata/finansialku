@@ -60,16 +60,13 @@ export default function useTransactionViewController(){
         setSelectedItem(id)
     }
 
-    const doHandlingOnGoBack = (type: string, isCategory: boolean) => {
+    const doHandlingOnGoBack = (type: string) => {
         if(type == selectedType){
             doGetTransactionByType(type)
         }else{
             onSelectedType(type)
         }
 
-        if(isCategory){
-            fetchCategories()
-        }
         onSelectedItem('')
     }
 

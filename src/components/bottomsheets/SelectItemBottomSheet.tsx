@@ -19,7 +19,7 @@ export const SelectItemBottomSheet = forwardRef(({title, data, selectedItem, onS
                 <Typography viewStyle={{ marginBottom: 8 }} textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{title}</Typography>
                 <Stack>
                     { data?.map((item, index) => (
-                      <SelectItemView onPress={() => onSelected!(item)} isDivider={index < data.length - 1} isSelected={selectedItem?.id == item.id} title={item.name}/>  
+                      <SelectItemView key={index} onPress={() => onSelected!(item)} isDivider={index < data.length - 1} isSelected={selectedItem?.id == item.id} title={item.name}/>  
                     ))}
                 </Stack>
             </Stack>

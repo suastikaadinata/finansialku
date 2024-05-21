@@ -9,12 +9,10 @@ import { children, field, date} from '@nozbe/watermelondb/decorators'
 export default class UserModel extends Model {
   static table = 'users'
   static associations = {
-    budgets: { type: 'has_many', foreignKey: 'user_id' },
     categories: { type: 'has_many', foreignKey: 'user_id' },
     transactions: { type: 'has_many', foreignKey: 'user_id' },
   }
   
-  @children('budgets') budgets
   @children('categories') categories
   @children('transactions') transactions
 

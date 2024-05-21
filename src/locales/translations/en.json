@@ -40,7 +40,9 @@
         "edit_password": "Edit Password",
         "old_password": "Old Password",
         "new_password": "New Password",
-        "new_password_confirmation": "Confirm New Password"
+        "new_password_confirmation": "Confirm New Password",
+        "close": "Close",
+        "budget": "Budget"
     },
     "description": {
         "account_security": "Change your password",
@@ -66,7 +68,8 @@
         "date_transaction": "Select your date transaction",
         "old_password": "Enter your old password",
         "new_password": "Enter your new password",
-        "new_password_confirmation": "Enter your new password confirmation"
+        "new_password_confirmation": "Enter your new password confirmation",
+        "budget": "Enter your budget"
     },
     "gender": {
         "male": "Male",
@@ -84,6 +87,20 @@
     "language": {
         "english": "English",
         "indonesian": "Bahasa"
+    },
+    "error": {
+        "title": {
+            "username_or_password_incorrect": "Username or password incorrect",
+            "username_has_been_taken": "Username has been taken",
+            "old_password_incorrect": "Old password incorrect",
+            "internal_server_error": "Error 500" 
+        },
+        "description": {
+            "username_or_password_incorrect": "The username or password you entered is incorrect. Please check your username and password again.",
+            "username_has_been_taken": "The username you entered has been taken. Please use another username.",
+            "old_password_incorrect": "The old password you entered is incorrect. Please check your old password again.",
+            "internal_server_error": "Internal server error. Please try again later."
+        }
     },
     "forgot_password": "Forgot password ?",
     "tap_here": "Tap here.",

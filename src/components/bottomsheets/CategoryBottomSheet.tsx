@@ -30,12 +30,12 @@ export const CategoryBottomSheet = forwardRef(({ isAdd, isEdit, initialData, onS
     
     const schema = yup.object({
 		name: yup.string().required().label(t('title.name')),
-		description: yup.string().label(t('title.description')).nullable(),
+        budget: yup.number().required().label(t('title.budget'))
 	}).required();
 	
 	const defaultValues = {
 		name: "",
-		description: ""
+        budget: 0
 	};
 	
 	const method = useForm({
@@ -46,15 +46,17 @@ export const CategoryBottomSheet = forwardRef(({ isAdd, isEdit, initialData, onS
     useEffect(() => {
         if(isEdit && initialData){
             method.setValue('name', initialData.name)
-            method.setValue('description', initialData.description)
+            method.setValue('budget', `${initialData.budget}`)
+        }else{
+            method.reset()
+            method.clearErrors("name")
         }
     }, [isEdit, initialData])
 
     const onSubmitForm = async(data: any) => {
-        method.reset()
         onSubmit({
             name: data.name,
-            description: (data.description && data.description.trim().length > 0) ? data.description : null
+            budget: data.budget
         })
     }
     
@@ -70,9 +72,12 @@ export const CategoryBottomSheet = forwardRef(({ isAdd, isEdit, initialData, onS
                         placeholder={t('placeholder.name')}
                     />
                     <RHFTextField
-                        name={"description"}
-                        title={t('title.description')}
-                        placeholder={t('placeholder.description')}
+                        name={"budget"}
+                        title={t('title.budget')}
+                        required
+                        placeholder={t('placeholder.budget')}
+                        inputMode='numeric'
+                        keyboardType='number-pad'
                     />
                </FormProvider>
                <Stack mt={24}>
