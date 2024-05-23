@@ -13,10 +13,9 @@ import useLoginViewController from '../view-controller/useLoginViewController';
 import RHFTextField from '../components/hookforms/RHFTextField';
 import RHFPasswordField from '../components/hookforms/RHFPasswordField';
 import CustomButton from '../components/CustomButton';
-import { Keyboard, TouchableOpacity } from 'react-native';
-import { NavigateProps } from '../entities/GlobalProps';
+import { Keyboard } from 'react-native';
+import { NavigateProps } from '../model/GlobalProps';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 
 export default function LoginView({ navigation }: NavigateProps){
     const { method, isLoadingForm, doSubmitLogin } = useLoginViewController()

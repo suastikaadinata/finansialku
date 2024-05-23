@@ -4,16 +4,16 @@
  */
 
 import React, { useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { SelectItem } from "../entities/Select";
+import { SelectItem } from "../model/Select";
 import Constants from "../data/Constants";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { useBottomSheet } from "../provider/BottomSheetProvider";
 import userViewModel from "../view-model/userViewModel";
-import { UserItem } from "../entities/User";
+import { UserItem } from "../model/User";
 
 export default function useEditAccountViewController(){
     const { t } = useTranslation();

@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import { currencyFormat } from "../utils/Utilities";
 import { useIsFocused } from "@react-navigation/native";
 import Constants from "../data/Constants";
-import { TransactionItem } from "../entities/Transaction";
+import { TransactionItem } from "../model/Transaction";
 import moment from "moment";
 
 interface Props{
@@ -31,7 +31,7 @@ interface Props{
 export default function HomeView(){
     const { t } = useTranslation();
     const isFocused = useIsFocused();
-    const { pieData, totalIncome, totalSpending, totalBalance, transactionData, fetchTransaction } = useHomeViewController();
+    const { pieData, totalIncome, totalSpending, totalBalance, totalBudget, transactionData, fetchTransaction } = useHomeViewController();
 
     useEffect(() => {
         if(isFocused) fetchTransaction()
@@ -83,7 +83,7 @@ export default function HomeView(){
         )
     }
 
-    const MonthlyBudgetView = () => {
+    const MonthlyBudgetView = memo(() => {
         return(
             <Surface elevation={4} style={{ 
                 marginHorizontal: 16,
@@ -93,20 +93,26 @@ export default function HomeView(){
                 borderRadius: 8
              }}>
                 <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('your_monthly_budget')}</Typography>
-                <Typography textStyle={{ color: colors.neutral.neutral_70 }} viewStyle={{ marginTop: 2 }}>{t("spend_minus_total", { spend: "Rp. 150.000", total: "Rp. 500.00" })}</Typography>
+                <Typography textStyle={{ color: colors.neutral.neutral_70 }} viewStyle={{ marginTop: 2 }}>{t("spend_minus_total", { spend: `${currencyFormat(totalSpending)}`, total: `${currencyFormat(totalBudget)}` })}</Typography>
+                { pieData.persentage > 0 ?
                 <Stack mt={16} style={{ alignItems: 'center' }}>
                     <PieChart
                         donut
                         innerRadius={80}
-                        data={pieData}
+                        data={pieData.data}
                         centerLabelComponent={() => {
-                            return <Typography textStyle={{fontSize: 30}}>70%</Typography>;
+                            return <Typography textStyle={{fontSize: 30}}>{pieData.persentage.toFixed(2)}%</Typography>;
                         }}
                     />
+                </Stack> 
+                :
+                <Stack mt={16}>
+                    <Typography textStyle={{ color: colors.neutral.neutral_60 }}>{t('empty.chart')}</Typography>
                 </Stack>
+                }
             </Surface>
         )
-    }
+    })
 
     const TransactionItemView = memo(({ isIncome, transaction, isLast }: Props) => {
         return(
@@ -136,7 +142,7 @@ export default function HomeView(){
                     data={transactionData}
                     contentContainerStyle={{ marginVertical: 16, paddingBottom: 8 }}
                     scrollEnabled={false}
-                    renderItem={({ item, index }) => <TransactionItemView isIncome={item.type == Constants.TRANSACTION.INCOME} transaction={item} isLast={index == (transactionData.length - 1)}/>}
+                    renderItem={({ item, index }) => <TransactionItemView key={index} isIncome={item.type == Constants.TRANSACTION.INCOME} transaction={item} isLast={index == (transactionData.length - 1)}/>}
                     ListEmptyComponent={() => <Typography textStyle={{ color: colors.neutral.neutral_60 }}>{t('empty.latest_transaction')}</Typography>}
                 />
             </Surface>

@@ -14,7 +14,7 @@ import { FormProvider } from 'react-hook-form';
 import RHFPasswordField from '../components/hookforms/RHFPasswordField';
 import { Surface } from 'react-native-paper';
 import CustomButton from '../components/CustomButton';
-import { NavigateProps } from '../entities/GlobalProps';
+import { NavigateProps } from '../model/GlobalProps';
 
 export default function EditPasswordView({ navigation }: NavigateProps){
     const { t } = useTranslation();

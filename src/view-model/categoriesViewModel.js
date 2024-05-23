@@ -12,6 +12,8 @@ import { useBottomSheet } from "../provider/BottomSheetProvider"
 
 export default function categoriesViewModel(){
     const { showErrorBS } = useBottomSheet() 
+    const last30day = moment().subtract(30, 'days').unix()
+    const currentDate = moment().unix()
 
     const getCategories = async() => {
         const userId = await AsyncStorage.getItem(Constants.USER_ID)
@@ -53,9 +55,29 @@ export default function categoriesViewModel(){
         })
     }
 
+    const getCategoryByTransactionAmountAndBudget = async() => {
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
+        return await database.get('categories').query(
+            Q.unsafeSqlQuery(
+              `select id, name, budget, IFNULL((select sum(transactions.amount) from transactions where transactions.category_id = categories.id and transactions.type = '${Constants.TRANSACTION.SPENDING}' and (transactions.date between ${last30day} and ${currentDate})), 0) as total_transaction from categories where user_id = '${userId}'`,
+            )
+        ).unsafeFetchRaw()
+    }
+
+    const getSumBudget = async() => {
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
+        return await database.get('categories').query(
+            Q.unsafeSqlQuery(
+              `select sum(budget) as total_budget from categories where user_id = '${userId}'`,
+            )
+        ).unsafeFetchRaw()
+    }
+
     return{
         getCategories,
         doCreateCategories,
-        doUpdateCategories
+        doUpdateCategories,
+        getCategoryByTransactionAmountAndBudget,
+        getSumBudget
     }
 }

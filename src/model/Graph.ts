@@ -3,6 +3,11 @@
  * Copyright (c) 2024 - Made with love
  */
 
+export interface GraphData{
+    totalMoney: number;
+    chartData: GraphItem[];
+}
+
 export interface GraphItem{
     value: number;
     color: string;

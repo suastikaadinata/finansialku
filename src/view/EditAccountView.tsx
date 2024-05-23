@@ -6,7 +6,7 @@
 import React, { useEffect, useLayoutEffect } from "react";
 import Page from "../components/Page";
 import Stack from "../components/Stack";
-import { NavigateProps } from "../entities/GlobalProps";
+import { NavigateProps } from "../model/GlobalProps";
 import { colors } from "../styles/colors";
 import { useTranslation } from "react-i18next";
 import { ScrollView } from "react-native-gesture-handler";

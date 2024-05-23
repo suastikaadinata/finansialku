@@ -10,7 +10,7 @@ import Typography from "./Typography";
 import CustomButton from "./CustomButton";
 import { Divider } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { TransactionItem } from "../entities/Transaction";
+import { TransactionItem } from "../model/Transaction";
 import { colors } from "../styles/colors";
 import moment from "moment";
 import { currencyFormat } from "../utils/Utilities";

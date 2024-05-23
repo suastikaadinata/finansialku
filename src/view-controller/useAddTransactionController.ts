@@ -6,13 +6,13 @@ import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CategoryItem } from '../entities/Category';
+import { CategoryItem } from '../model/Category';
 import categoriesViewModel from '../view-model/categoriesViewModel';
 import transactionViewModel from '../view-model/transactionViewModel';
 import Constants from '../data/Constants';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
-import { SelectItem } from '../entities/Select';
+import { SelectItem } from '../model/Select';
 import { useBottomSheet } from '../provider/BottomSheetProvider';
 
 export default function useAddTransactionController(){

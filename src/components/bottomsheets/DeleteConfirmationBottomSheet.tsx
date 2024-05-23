@@ -3,15 +3,13 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React, { ComponentProps, forwardRef, useState } from 'react';
+import React, { ComponentProps, forwardRef } from 'react';
 import { BaseBottomSheet } from './BaseBottomSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Stack from '../Stack';
 import Typography from '../Typography';
 import { colors } from '../../styles/colors';
 import { useTranslation } from 'react-i18next';
-import SelectItemView from '../SelectItemView';
-import { CategoryItem } from '../../entities/Category';
 import CustomButton from '../CustomButton';
 
 export const DeleteConfirmationBottomSheet = forwardRef(({title, description, onDelete, onCancel,...props}: {title?: string, description?: string, onDelete?: () => void, onCancel?: () => void, props?: ComponentProps<typeof RBSheet>}, ref) => {

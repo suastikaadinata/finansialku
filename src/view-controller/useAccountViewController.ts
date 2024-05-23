@@ -3,10 +3,10 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import userViewModel from "../view-model/userViewModel";
-import { UserItem } from "../entities/User";
-import { SelectItem } from "../entities/Select";
+import { UserItem } from "../model/User";
+import { SelectItem } from "../model/Select";
 import Constants from "../data/Constants";
 import { useTranslation } from "react-i18next";
 import { useBottomSheet } from "../provider/BottomSheetProvider";

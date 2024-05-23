@@ -12,14 +12,13 @@ import Stack from '../components/Stack';
 import { Icon } from "@rneui/themed";
 import Typography from '../components/Typography';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { Tile } from '@rneui/base';
 import { useTranslation } from 'react-i18next';
 import useGlobalDispatch from '../redux/useGlobalDispatch';
 import useAccountViewController from '../view-controller/useAccountViewController';
 import { useIsFocused } from '@react-navigation/native';
 import Constants from '../data/Constants';
 import moment from 'moment';
-import { NavigateProps } from '../entities/GlobalProps';
+import { NavigateProps } from '../model/GlobalProps';
 
 interface Props{
     icon?: string;
@@ -34,7 +33,6 @@ export default function AccountView({ navigation }: NavigateProps){
     const { onLogoutDispatch } = useGlobalDispatch();
     const { 
         userDetail, 
-        selectedLanguage, 
         onOpenLanguageBS, 
         fetchUserDetail 
     } = useAccountViewController();

@@ -7,14 +7,13 @@ import React from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Stack from "../components/Stack";
-import Typography from "../components/Typography";
 import { colors, transparent } from "../styles/colors";
-import { View } from "react-native";
 import TransactionView from "./TransactionView";
 import HomeView from "./HomeView";
 import AccountView from "./AccountView";
 import { useTranslation } from "react-i18next";
 import CategoryView from "./CategoryView";
+import InsightView from "./InsightView";
 
 const Tab = createBottomTabNavigator();
 
@@ -94,9 +93,9 @@ export default function MainView(){
           />
            <Tab.Screen
             name="Insight"
-            component={TransactionView}
+            component={InsightView}
             options={{
-              tabBarLabel: 'Insight',
+              tabBarLabel: t("title.insight"),
               tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="lightbulb-outline" color={color} size={28} />

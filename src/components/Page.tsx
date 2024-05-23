@@ -8,8 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  StatusBar,
-  View,
   StyleProp,
   ViewStyle,
 } from 'react-native';

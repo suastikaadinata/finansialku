@@ -10,7 +10,7 @@ import Stack from '../Stack';
 import Typography from '../Typography';
 import { colors } from '../../styles/colors';
 import SelectItemView from '../SelectItemView';
-import { SelectItem } from '../../entities/Select';
+import { SelectItem } from '../../model/Select';
 
 export const SelectItemBottomSheet = forwardRef(({title, data, selectedItem, onSelected, ...props}: {title?: string, data?: any[], selectedItem?: any, props?: ComponentProps<typeof RBSheet>, onSelected?: (value: any) => void}, ref) => {
     return(

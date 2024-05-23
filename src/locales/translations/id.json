@@ -42,15 +42,20 @@
         "new_password": "Kata Sandi Baru",
         "new_password_confirmation": "Konfirmasi Kata Sandi Baru",
         "close": "Tutup",
-        "budget": "Anggaran"
+        "budget": "Anggaran",
+        "insight": "Insight",
+        "monthly_summary": "Total {{type}} dalam 30 hari terakhir",
+        "monthly_comparison": "Perbandingan Bulanan"
     },
     "description": {
         "account_security": "Atur kata sandi akunmu",
         "language": "Atur bahasa yang ingin digunakan",
         "category": "Tambah kategori transaksimu dan maksimal 8 kategori untuk semua transaksi",
-        "max_category": "Maksimal 8 kategori",
+        "max_category": "Maksimal 8 kategori untuk semua transaksi",
         "delete_transaction": "Apakah kamu yakin ingin menghapus transaksi ini ?",
-        "category_empty": "Mohon tambahkan kategori terlebih dahulu sebelum menambahkan transaksi apapun"
+        "category_empty": "Mohon tambahkan kategori terlebih dahulu sebelum menambahkan transaksi apapun",
+        "monthly_summary": "{{type}} pembagian untuk setiap kategori dalam 30 hari terakhir",
+        "monthly_comparison": "Perbandingan dari pemasukan dan pengeluaran dalam 6 bulan terakhir"
     },
     "placeholder": {
         "username": "Masukkan nama pengguna",
@@ -92,11 +97,11 @@
     "tap_here": "Tekan disini.",
     "your_balance_this_month_is": "Saldo kamu saat ini adalah",
     "your_monthly_budget": "Anggaranmu",
-    "spend_minus_total": "Kamu menghabiskan {{spend}} dari total {{total}} dalam 30 hari terakhir",
+    "spend_minus_total": "Kamu menghabiskan {{spend}} dari total anggaran {{total}} dalam 30 hari terakhir",
     "latest_transaction": "Transaksi terakhir",
-    "monthly_summary": "Ringkasan 30 hari terakhir",
     "total_spending_a_month": "Total Pengeluaran",
     "total_income_a_month": "Total Pemasukan",
     "version": "Versi",
-    "select_gender": "Pilih Jenis Kelamin"
+    "select_gender": "Pilih Jenis Kelamin",
+    "category_budget_spending": "{{spending}} dari {{budget}}"
 }

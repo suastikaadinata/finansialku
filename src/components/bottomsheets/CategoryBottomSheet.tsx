@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import CustomButton from '../CustomButton';
 import Typography from '../Typography';
 import { colors } from '../../styles/colors';
-import { CategoryItem } from '../../entities/Category';
+import { CategoryItem } from '../../model/Category';
 
 interface Props{
     isAdd: boolean;

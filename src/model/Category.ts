@@ -9,6 +9,7 @@ export interface CategoryItem{
     created_at?: number;
     name: string;
     budget: number;
+    total_transaction?: number;
     id?: string;
     user_id?: string;
 }

@@ -3,9 +3,8 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import { RouterItem } from "../entities/Router";
+import { RouterItem } from "../model/Router";
 import AddTransactionView from "../view/AddTransactionView";
-import CategoryView from "../view/CategoryView";
 import EditAccountView from "../view/EditAccountView";
 import EditPasswordView from "../view/EditPasswordView";
 import LoginView from "../view/LoginView";
@@ -18,7 +17,6 @@ export const routingWithoutAuthentication: RouterItem[] = [
 
 export const routingWithAuthentication: RouterItem[] = [
     { name: "Main", page: MainView, isHeaderShown: false }, 
-    // { name: "Category", page: CategoryView, isHeaderShown: true }, 
     { name: "AddTransaction", page: AddTransactionView, isHeaderShown: true }, 
     { name: "EditAccount", page: EditAccountView, isHeaderShown: true }, 
     { name: "EditPassword", page: EditPasswordView, isHeaderShown: true }

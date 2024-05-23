@@ -6,22 +6,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import transactionViewModel from "../view-model/transactionViewModel";
 import categoriesViewModel from "../view-model/categoriesViewModel";
-import { TransactionItem } from "../entities/Transaction";
-import { GraphItem } from "../entities/Graph";
-import { graphColor } from "../data/graphColor";
+import { TransactionItem } from "../model/Transaction";
 import { useBottomSheet } from "../provider/BottomSheetProvider";
 import { useTranslation } from "react-i18next";
-import { CategoryItem } from "../entities/Category";
+import { CategoryItem } from "../model/Category";
 
 export default function useTransactionViewController(){
     const { t } = useTranslation();
     const { showDeleteBS, hideDeleteBS, showAlertBS, hideAlertBS } = useBottomSheet()
-    const { getTransactionByType, getTransactionSumByCategory, doDeleteTransaction } = transactionViewModel();
+    const { getTransactionByType, doDeleteTransaction } = transactionViewModel();
     const { getCategories } = categoriesViewModel();
     const [transactionData, setTransactionData] = useState<TransactionItem[]>([])
     const [categories, setCategories] = useState<CategoryItem[]>([])
-    const [pieData, setPieData] = useState<GraphItem[]>([])
-    const [totalMoney, setTotalMoney] = useState(0)
     const [selectedItem, setSelectedItem] = useState('')
     const [selectedType, setSelectedType] = useState('income');
 
@@ -29,17 +25,6 @@ export default function useTransactionViewController(){
         await getTransactionByType(type).then((data) => {
             console.log('data transaction', data)
             setTransactionData(data)
-        })
-        await getTransactionSumByCategory(type).then((data: any) => {
-            const chartData: GraphItem[] = []
-            let total = 0
-            data.map((item: any, index: number) => {
-                total += item.total
-                chartData.push({ value: item.total, color: graphColor[index], title: item.category_name })
-            })
-
-            setTotalMoney(total)
-            setPieData(chartData)
         })
     }
 
@@ -101,9 +86,7 @@ export default function useTransactionViewController(){
     }
 
     return{
-        pieData,
         transactionData,
-        totalMoney,
         selectedType,
         selectedItem,
         onSelectedType,

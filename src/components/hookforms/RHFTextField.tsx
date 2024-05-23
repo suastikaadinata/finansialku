@@ -24,17 +24,6 @@ interface Props {
 
 export default function RHFTextField({ name, helperText, readOnly, title, required, isClickable, onPress,...props }: Props & ComponentProps<typeof Input>) {
   const { control } = useFormContext();
-  const TouchableContainer = ({children}: Props) => {
-    return(
-      <>
-        { isClickable ? 
-        <TouchableOpacity delayPressIn={0} onPress={onPress}>
-          {children}
-        </TouchableOpacity>
-        : <> {children} </> }
-      </>
-    )
-  }
 
   return <Controller
     control={control}
@@ -71,7 +60,6 @@ export default function RHFTextField({ name, helperText, readOnly, title, requir
             onChangeText={onChange}
             value={value}
             errorMessage={fieldState.error != undefined ? fieldState.error?.message : helperText}
-            // labelStyle={{ marginBottom: 4, color: colors.neutral.neutral_90 }}
             inputContainerStyle={{
                 borderWidth: 1,
                 borderRadius: 8,

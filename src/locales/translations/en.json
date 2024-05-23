@@ -42,15 +42,20 @@
         "new_password": "New Password",
         "new_password_confirmation": "Confirm New Password",
         "close": "Close",
-        "budget": "Budget"
+        "budget": "Budget",
+        "insight": "Insight",
+        "monthly_summary": "Total {{type}} in the last 30 days",
+        "monthly_comparison": "Monthly Comparison"
     },
     "description": {
         "account_security": "Change your password",
         "language": "Set your account language",
         "category": "Add your category and maximum 8 categories for all transactions",
-        "max_category": "Maximum 8 categories",
+        "max_category": "Maximum 8 categories for all transactions",
         "delete_transaction": "Are you sure want to delete this transaction ?",
-        "category_empty": "Please add your categories first before add any transactions."
+        "category_empty": "Please add your categories first before add any transactions.",
+        "monthly_summary": "{{type}} distribution for each category in the last 30 days",
+        "monthly_comparison": "Comparison of income and expenses in the last 6 months"
     },
     "placeholder": {
         "username": "Enter your username",
@@ -106,11 +111,11 @@
     "tap_here": "Tap here.",
     "your_balance_this_month_is": "Your balance is",
     "your_monthly_budget": "Budget ",
-    "spend_minus_total": "You spend {{spend}} of total {{total}} in the last 30 days",
+    "spend_minus_total": "You spend {{spend}} of total budget {{total}} in the last 30 days",
     "latest_transaction": "Latest Transactions",
-    "monthly_summary": "Last 30 Days Summary",
     "total_spending_a_month": "Total Spending",
     "total_income_a_month": "Total Income",
     "version": "Version",
-    "select_gender": "Select Gender"
+    "select_gender": "Select Gender",
+    "category_budget_spending": "{{spending}} of {{budget}}"
 }

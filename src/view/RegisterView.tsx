@@ -15,7 +15,7 @@ import RHFPasswordField from '../components/hookforms/RHFPasswordField';
 import CustomButton from '../components/CustomButton';
 import { Keyboard, ScrollView } from 'react-native';
 import { Surface, IconButton } from 'react-native-paper';
-import { NavigateProps } from '../entities/GlobalProps';
+import { NavigateProps } from '../model/GlobalProps';
 import DatePicker from 'react-native-date-picker'
 import { useTranslation } from 'react-i18next';
 

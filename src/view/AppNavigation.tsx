@@ -7,12 +7,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAppSelector } from '../redux/store/hook';
-import LoginView from './LoginView';
-import RegisterView from './RegisterView';
-import MainView from './MainView';
-import CategoryView from './CategoryView';
-import AddTransactionView from './AddTransactionView';
-import EditAccountView from './EditAccountView';
 import { routingWithAuthentication, routingWithoutAuthentication } from '../data/Routers';
 
 const Stack = createNativeStackNavigator();

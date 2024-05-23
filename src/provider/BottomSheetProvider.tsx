@@ -5,7 +5,6 @@
 
 import React, { useState, createContext, useContext, useRef, useEffect } from "react";
 import { DeleteConfirmationBottomSheet } from "../components/bottomsheets/DeleteConfirmationBottomSheet";
-import { SelectItem } from "../entities/Select";
 import { SelectItemBottomSheet } from "../components/bottomsheets/SelectItemBottomSheet";
 import { AlertBottomSheet } from "../components/bottomsheets/AlertBottomSheet";
 import Constants from "../data/Constants";

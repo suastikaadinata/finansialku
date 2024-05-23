@@ -13,6 +13,7 @@ import { useBottomSheet } from "../provider/BottomSheetProvider"
 export default function transactionViewModel(){
     const { showErrorBS } = useBottomSheet()
     const last30day = moment().subtract(30, 'days').unix()
+    const last6month = moment().subtract(6, 'months').unix()
     const currentDate = moment().unix()
 
     const doCreateTransaction = async (data, onSuccess, onError) => {
@@ -72,6 +73,15 @@ export default function transactionViewModel(){
             .unsafeFetchRaw()
     }
 
+    const getSumTransctionLastSixMonthWithType = async() => {
+        const userId = await AsyncStorage.getItem(Constants.USER_ID)
+        return await database.get('transactions').query(
+            Q.unsafeSqlQuery(
+              `select strftime('%Y-%m', date, 'unixepoch') as month, IFNULL(sum(case when type = '${Constants.TRANSACTION.INCOME}' then amount end), 0) as total_income, IFNULL(sum(case when type = '${Constants.TRANSACTION.SPENDING}' then amount end), 0) as total_spending from transactions where user_id = '${userId}' and (date between ${last6month} and ${currentDate}) group by month order by month asc limit 6`,
+            )
+        ).unsafeFetchRaw()
+    }
+
     const doUpdateTransaction = async(id, data, onSuccess, onError) => {
         await database.write(async() => {
             const transaction = await database.get('transactions').find(id)
@@ -108,6 +118,7 @@ export default function transactionViewModel(){
         getTransactionSumByCategory,
         getTransactionSumByType,
         getTransactionByLimit,
+        getSumTransctionLastSixMonthWithType,
         doUpdateTransaction,
         doDeleteTransaction,
     }

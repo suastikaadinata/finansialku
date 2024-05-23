@@ -12,7 +12,7 @@ import moment from "moment";
 import useGlobalDispatch from "../redux/useGlobalDispatch";
 import Constants from "../data/Constants";
 import { useTranslation } from "react-i18next";
-import { SelectItem } from "../entities/Select";
+import { SelectItem } from "../model/Select";
 import { useBottomSheet } from "../provider/BottomSheetProvider";
 
 export default function useRegisterViewController() {

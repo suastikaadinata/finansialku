@@ -5,14 +5,17 @@
 
 import React, { useRef, useState } from "react";
 import categoriesViewModel from "../view-model/categoriesViewModel";
-import { CategoryItem } from "../entities/Category";
+import { CategoryItem } from "../model/Category";
+import moment from "moment";
 
 export default function useCategoryViewController(){
-    const { getCategories, doCreateCategories, doUpdateCategories } = categoriesViewModel();
+    const { doCreateCategories, doUpdateCategories, getCategoryByTransactionAmountAndBudget } = categoriesViewModel();
     const [categories, setCategories] = useState<CategoryItem[]>([])
     const [isEdit, setIsEdit] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState<CategoryItem>({} as CategoryItem)
     const categoryRef = useRef()
+    const last30day = moment().subtract(30, 'days').format("DD MMM YYYY")
+    const currentDate = moment().format("DD MMM YYYY")
 
     const onOpenCategoryBS = () => {
         categoryRef?.current?.open();
@@ -49,7 +52,8 @@ export default function useCategoryViewController(){
     }
 
     const fetchCategories = async() => {
-        const data = await getCategories()
+        const data = await getCategoryByTransactionAmountAndBudget()
+        console.log("cat", data)
         setCategories(data)
     }
     
@@ -58,6 +62,8 @@ export default function useCategoryViewController(){
         categoryRef,
         selectedCategory,
         isEdit,
+        last30day,
+        currentDate,
         doDisableEdit,
         onSelectedCategory,
         onOpenCategoryBS,

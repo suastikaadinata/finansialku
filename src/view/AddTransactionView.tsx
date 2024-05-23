@@ -10,7 +10,7 @@ import Stack from '../components/Stack';
 import { Keyboard, ScrollView } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { useTranslation } from 'react-i18next';
-import { NavigateProps } from '../entities/GlobalProps';
+import { NavigateProps } from '../model/GlobalProps';
 import useAddTransactionController from '../view-controller/useAddTransactionController';
 import { FormProvider, set } from 'react-hook-form';
 import RHFTextField from '../components/hookforms/RHFTextField';
@@ -29,11 +29,9 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
         onOpenDatePicker,
         onCloseDatePicker,
         onChangeDate,
-        onSelectedTypeTransaction,
         onOpenSelectCategoryBS,
         onOpenTypeTransactionBS, 
         fetchCategories,
-        onSelectedCategory,
         onSubmitTransaction,
         setInitialFormData,
         onSubmitUpdateTransaction
