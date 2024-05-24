@@ -69,6 +69,16 @@ const colors = {
     border: "#B1C4F6",
     hover: "#114CD6",
     surface: "#F0F3FF",
+  },
+  graph: {
+    blue: "#03AED2",
+    yellow: "#FDDE55",
+    red: "#B33771",
+    green: "#43936C",
+    orange: "#F97F51",
+    black: "#404040",
+    purple: "#8e44ad",
+    gray: "#aaa69d"
   }
 };
 export { colors };

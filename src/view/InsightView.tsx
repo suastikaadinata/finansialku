@@ -16,7 +16,7 @@ import { PieChart, BarChart } from "react-native-gifted-charts";
 import { currencyFormat } from "../utils/Utilities";
 import Constants from "../data/Constants";
 import useInsightViewController from "../view-controller/useInsightViewController";
-import { useIsFocused } from "@react-navigation/native";
+import { RefreshControl } from "react-native";
 
 interface Props{
     graphData?: GraphData;
@@ -28,20 +28,23 @@ interface Props{
 
 export default function InsightView(){
     const { t } = useTranslation();
-    const isFocused = useIsFocused()
-    const { incomePieData, spendingPieData, monthlyComparionData, fetchAllData } = useInsightViewController()
+    const { 
+        chartData,
+        fetchAllData, 
+        onPressBarChart, 
+        onPressPieChart,
+    } = useInsightViewController()
 
     useEffect(() => {
-        if(isFocused) fetchAllData()
-    }, [isFocused])
+        fetchAllData()
+    }, [])
 
     const CategoryItemView = ({ graphItem }: Props) => {
         return(
             <Stack direction="row" style={{ flexWrap: 'wrap' }}>
                 <Stack style={{ height: 10, width: 10, backgroundColor: graphItem!.color, borderRadius: 2, alignSelf: 'center' }}/>
-                <Stack direction="row" style={{ flex: 1, marginLeft: 6, flexWrap: 'wrap' }}>
+                <Stack style={{ flex: 1, marginLeft: 6 }}>
                     <Typography textStyle={{ color: colors.neutral.neutral_90 }}>{graphItem?.title}</Typography>
-                    <Typography textStyle={{ fontSize: 10, color: colors.neutral.neutral_70 }} viewStyle={{ marginLeft: 4, alignSelf: 'center' }}>({currencyFormat(graphItem?.value)})</Typography>
                 </Stack>
             </Stack>
         )
@@ -58,20 +61,21 @@ export default function InsightView(){
              }}>
                 <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('title.monthly_summary', { type: t(`transaction.${type}`) })}</Typography>
                 <Typography viewStyle={{ marginTop: 4 }} textStyle={{ fontSize: 12, color: colors.neutral.neutral_70 }}>{t('description.monthly_summary', { type: t(`transaction.${type}`) })}</Typography>
-                { (graphData && graphData?.chartData.length > 0) ?
+                { (graphData && graphData.chartData.length > 0) ?
                 <Stack mt={16}>
                     <Stack direction="row">
                         <Stack mr={8} style={{ flex: 1, alignItems: 'center' }}>
                             <PieChart
                                 donut
                                 radius={75}
-                                data={graphData?.chartData}
+                                data={graphData.chartData}
                                 showText
+                                onPress={(item: any) => onPressPieChart(item)}
                             />
                         </Stack>
                         <Stack ml={8} style={{ flex: 1, alignContent: 'center' }}>
                             <FlatList 
-                                data={graphData?.chartData}
+                                data={graphData.chartData}
                                 scrollEnabled={false}
                                 showsVerticalScrollIndicator={false}
                                 renderItem={(item) => (
@@ -114,7 +118,7 @@ export default function InsightView(){
              }}>
                 <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t("title.monthly_comparison")}</Typography>
                 <Typography viewStyle={{ marginTop: 4 }} textStyle={{ fontSize: 12, color: colors.neutral.neutral_70 }}>{t("description.monthly_comparison")}</Typography>
-                { monthlyComparionData.length > 0 ?
+                { chartData.monthlyComparionData.length > 0 ?
                 <Stack mt={16} >
                     <Stack direction="row">
                         <TransactionTypeView title={t('transaction.income')} color={colors.primary.main}/>
@@ -123,7 +127,7 @@ export default function InsightView(){
                 
                     <Stack mt={24}>
                         <BarChart
-                            data={monthlyComparionData}
+                            data={chartData.monthlyComparionData}
                             barWidth={12}
                             spacing={24}
                             roundedTop
@@ -135,7 +139,7 @@ export default function InsightView(){
                             xAxisTextNumberOfLines={2}
                             noOfSections={6}
                             width={(Dimensions.get('window').width / 2) + 64}
-                            onPress={(item: any) => ToastAndroid.show(`${item.type} ${item.monthYear}: ${currencyFormat(item.value)}`, ToastAndroid.SHORT)}
+                            onPress={(item: any) => onPressBarChart(item)}
                             />
                     </Stack>
                 </Stack>
@@ -150,9 +154,11 @@ export default function InsightView(){
 
     return(
         <Page bgColor={colors.neutral.neutral_20}>
-            <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 16, paddingBottom: 32 }}>
-                <IncomeSpendingByCategoryGraphView type={Constants.TRANSACTION.INCOME} graphData={incomePieData}/>
-                <IncomeSpendingByCategoryGraphView type={Constants.TRANSACTION.SPENDING} graphData={spendingPieData}/>
+            <ScrollView 
+                contentContainerStyle={{ flexGrow: 1, paddingTop: 16, paddingBottom: 32 }}
+                refreshControl={<RefreshControl refreshing={false} onRefresh={fetchAllData}/>}>
+                <IncomeSpendingByCategoryGraphView type={Constants.TRANSACTION.INCOME} graphData={chartData.incomePieData}/>
+                <IncomeSpendingByCategoryGraphView type={Constants.TRANSACTION.SPENDING} graphData={chartData.spendingPieData}/>
                 <MonthlyComparisonGraphView />
             </ScrollView>
         </Page>

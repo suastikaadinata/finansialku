@@ -12,7 +12,7 @@ import CustomButton from '../components/CustomButton';
 import { useTranslation } from 'react-i18next';
 import { NavigateProps } from '../model/GlobalProps';
 import useAddTransactionController from '../view-controller/useAddTransactionController';
-import { FormProvider, set } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 import RHFTextField from '../components/hookforms/RHFTextField';
 import DatePicker from 'react-native-date-picker';
 
@@ -22,7 +22,6 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
     const { 
         method, 
         date,
-        selectedTypeTransaction, 
         categories, 
         isOpenDatePicker,
         isLoadingForm,
@@ -34,7 +33,6 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
         fetchCategories,
         onSubmitTransaction,
         setInitialFormData,
-        onSubmitUpdateTransaction
     } = useAddTransactionController()
 
     useLayoutEffect(() => {
@@ -61,26 +59,7 @@ export default function AddTransactionView({ navigation, route }: NavigateProps)
 
     const onSubmitForm = async(data: any) => {
         Keyboard.dismiss();
-        if(isEdit){
-            await onSubmitUpdateTransaction({
-                id: initialData.id,
-                name: data.name,
-                amount: data.amount,
-            }, 
-            () => {
-                console.log('success update transaction')
-                onGoBack(selectedTypeTransaction.id)
-            })
-        }else{
-            await onSubmitTransaction({
-                name: data.name,
-                amount: data.amount,
-            }, 
-            () => {
-                console.log('success transaction')
-                onGoBack(selectedTypeTransaction.id)
-            })
-        }
+        onSubmitTransaction(data, onGoBack, isEdit, initialData?.id)
     }
 
     const FormView = () => {

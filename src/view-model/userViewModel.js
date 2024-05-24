@@ -121,7 +121,8 @@ export default function userViewModel(){
                 }else{
                     showErrorBS({
                         title: t("error.title.username_or_password_incorrect"),
-                        description: t("error.description.username_or_password_incorrect")
+                        description: t("error.description.username_or_password_incorrect"),
+                        height: 225
                     })
                     onError()
                 }
@@ -129,7 +130,8 @@ export default function userViewModel(){
         }else{
             showErrorBS({
                 title: t("error.title.username_or_password_incorrect"),
-                description: t("error.description.username_or_password_incorrect")
+                description: t("error.description.username_or_password_incorrect"),
+                height: 225
             })
             onError()
         }

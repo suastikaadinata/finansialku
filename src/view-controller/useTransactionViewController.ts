@@ -3,7 +3,7 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import transactionViewModel from "../view-model/transactionViewModel";
 import categoriesViewModel from "../view-model/categoriesViewModel";
 import { TransactionItem } from "../model/Transaction";
@@ -85,6 +85,11 @@ export default function useTransactionViewController(){
         }
     }
 
+    const doRefreshing = async() => {
+        await fetchCategories()
+        await doGetTransactionByType(selectedType)
+    }
+
     return{
         transactionData,
         selectedType,
@@ -96,6 +101,7 @@ export default function useTransactionViewController(){
         doHandlingOnGoBack,
         onOpenDeleteConfirmation,
         onDeleteTransaction,
-        onGoAddTransactionPageHandling
+        onGoAddTransactionPageHandling,
+        doRefreshing
     }
 }

@@ -8,7 +8,7 @@ import Page from "../components/Page";
 import Stack from "../components/Stack";
 import { colors } from "../styles/colors";
 import Typography from "../components/Typography";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native";
 import { Icon } from "@rneui/themed";
 import { Divider, Surface } from "react-native-paper";
 import { FlatList, View } from "react-native";
@@ -17,10 +17,10 @@ import { PieChart } from "react-native-gifted-charts";
 import useHomeViewController from "../view-controller/useHomeViewController";
 import { useTranslation } from "react-i18next";
 import { currencyFormat } from "../utils/Utilities";
-import { useIsFocused } from "@react-navigation/native";
 import Constants from "../data/Constants";
 import { TransactionItem } from "../model/Transaction";
 import moment from "moment";
+import { RefreshControl } from "react-native";
 
 interface Props{
     isIncome?: boolean;
@@ -30,12 +30,15 @@ interface Props{
 
 export default function HomeView(){
     const { t } = useTranslation();
-    const isFocused = useIsFocused();
-    const { pieData, totalIncome, totalSpending, totalBalance, totalBudget, transactionData, fetchTransaction } = useHomeViewController();
+    const { 
+        pieData, 
+        homeData, 
+        fetchTransaction
+    } = useHomeViewController();
 
     useEffect(() => {
-        if(isFocused) fetchTransaction()
-    }, [isFocused])
+        fetchTransaction()
+    }, [])
 
     const HeaderView = () => {
         return(
@@ -51,7 +54,7 @@ export default function HomeView(){
                     <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_10, marginTop: 8 }}>{t('your_balance_this_month_is')}</Typography>
                     <Stack mt={12} style={{ alignItems: 'center' }}>
                         <View style={{ backgroundColor: colors.neutral.neutral_10, height: 1, width: 150, marginBottom: 12 }}/>
-                        <Typography textStyle={{ fontSize: 32, fontWeight: 700, color: colors.neutral.neutral_10 }}>{currencyFormat(totalBalance)}</Typography>
+                        <Typography textStyle={{ fontSize: 32, fontWeight: 700, color: colors.neutral.neutral_10 }}>{currencyFormat(homeData.totalBalance)}</Typography>
                     </Stack>
                 </Stack>
             </Stack>
@@ -67,7 +70,7 @@ export default function HomeView(){
                             <MaterialCommunityIcons name="arrow-up" color={colors.success.main} size={18}/>
                             <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>{t('transaction.income')}</Typography>
                         </Stack>
-                        <Typography textStyle={{ color: colors.success.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>{currencyFormat(totalIncome)}</Typography>
+                        <Typography textStyle={{ color: colors.success.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>{currencyFormat(homeData.totalIncome)}</Typography>
                     </Surface>
                 </Stack>
                 <Stack style={{ flex: 1 }}>
@@ -76,7 +79,7 @@ export default function HomeView(){
                             <MaterialCommunityIcons name="arrow-down" color={colors.danger.main} size={18}/>
                             <Typography textStyle={{ alignSelf: 'center' }} viewStyle={{ marginLeft: 4 }}>{t('transaction.spending')}</Typography>
                         </Stack>
-                        <Typography textStyle={{ color: colors.danger.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>{currencyFormat(totalSpending)}</Typography>
+                        <Typography textStyle={{ color: colors.danger.main, fontSize: 18, fontWeight: 700, marginTop: 2 }}>{currencyFormat(homeData.totalSpending)}</Typography>
                     </Surface>
                 </Stack>
             </Stack>
@@ -93,18 +96,18 @@ export default function HomeView(){
                 borderRadius: 8
              }}>
                 <Typography textStyle={{ fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{t('your_monthly_budget')}</Typography>
-                <Typography textStyle={{ color: colors.neutral.neutral_70 }} viewStyle={{ marginTop: 2 }}>{t("spend_minus_total", { spend: `${currencyFormat(totalSpending)}`, total: `${currencyFormat(totalBudget)}` })}</Typography>
+                <Typography textStyle={{ color: colors.neutral.neutral_70 }} viewStyle={{ marginTop: 2 }}>{t("spend_minus_total", { spend: `${currencyFormat(homeData.totalSpending)}`, total: `${currencyFormat(homeData.totalBudget)}` })}</Typography>
                 { pieData.persentage > 0 ?
-                <Stack mt={16} style={{ alignItems: 'center' }}>
+                <Stack mt={16}style={{ alignItems: 'center' }}>
                     <PieChart
                         donut
-                        innerRadius={80}
+                        innerRadius={75}
                         data={pieData.data}
                         centerLabelComponent={() => {
                             return <Typography textStyle={{fontSize: 30}}>{pieData.persentage.toFixed(2)}%</Typography>;
                         }}
                     />
-                </Stack> 
+                </Stack>
                 :
                 <Stack mt={16}>
                     <Typography textStyle={{ color: colors.neutral.neutral_60 }}>{t('empty.chart')}</Typography>
@@ -139,10 +142,11 @@ export default function HomeView(){
                     {t('latest_transaction')}
                 </Typography>
                 <FlatList 
-                    data={transactionData}
+                    data={homeData.transactionData}
                     contentContainerStyle={{ marginVertical: 16, paddingBottom: 8 }}
                     scrollEnabled={false}
-                    renderItem={({ item, index }) => <TransactionItemView key={index} isIncome={item.type == Constants.TRANSACTION.INCOME} transaction={item} isLast={index == (transactionData.length - 1)}/>}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item, index }) => <TransactionItemView key={index} isIncome={item.type == Constants.TRANSACTION.INCOME} transaction={item} isLast={index == (homeData.transactionData.length - 1)}/>}
                     ListEmptyComponent={() => <Typography textStyle={{ color: colors.neutral.neutral_60 }}>{t('empty.latest_transaction')}</Typography>}
                 />
             </Surface>
@@ -151,7 +155,9 @@ export default function HomeView(){
 
     return(
         <Page bgColor={colors.neutral.neutral_20}>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView 
+                contentContainerStyle={{ flexGrow: 1 }}
+                refreshControl={<RefreshControl refreshing={false} onRefresh={fetchTransaction}/>}>
                 <HeaderView />
                 <IncomeSpendingView />
                 <MonthlyBudgetView />

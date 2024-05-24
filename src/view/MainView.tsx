@@ -7,7 +7,7 @@ import React from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Stack from "../components/Stack";
-import { colors, transparent } from "../styles/colors";
+import { colors } from "../styles/colors";
 import TransactionView from "./TransactionView";
 import HomeView from "./HomeView";
 import AccountView from "./AccountView";
@@ -70,7 +70,7 @@ export default function MainView(){
                         height: 52,
                         width: 52,
                         borderRadius: 26,
-                        backgroundColor: transparent,
+                        backgroundColor: "transparent",
                         justifyContent: 'center',
                         alignItems: 'center',
                         borderColor: color,

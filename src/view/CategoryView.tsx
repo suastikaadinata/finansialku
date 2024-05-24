@@ -3,19 +3,18 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React, { useLayoutEffect, memo, useEffect, useCallback } from 'react';
+import React, { memo, useEffect } from 'react';
 import Page from '../components/Page';
 import Stack from '../components/Stack';
 import Typography from '../components/Typography';
 import { colors } from '../styles/colors';
-import { FlatList, Keyboard, ScrollView, ToastAndroid, TouchableOpacity } from 'react-native';
-import { Divider, IconButton, Surface } from 'react-native-paper';
+import { FlatList, Keyboard, RefreshControl, ScrollView, TouchableOpacity } from 'react-native';
+import { IconButton, Surface } from 'react-native-paper';
 import { CategoryBottomSheet } from '../components/bottomsheets/CategoryBottomSheet';
 import useCategoryViewController from '../view-controller/useCategoryViewController';
 import { CategoryItem } from '../model/Category';
 import { useTranslation } from 'react-i18next';
 import { currencyFormat } from '../utils/Utilities';
-import { useIsFocused } from '@react-navigation/native';
 
 interface Props{
     category?: CategoryItem;
@@ -23,7 +22,6 @@ interface Props{
 
 export default function CategoryView(){
     const { t } = useTranslation();
-    const isFocused = useIsFocused()
     const { 
         categoryRef, 
         categories, 
@@ -32,16 +30,15 @@ export default function CategoryView(){
         last30day,
         currentDate,
         fetchCategories, 
-        doDisableEdit, 
-        onOpenCategoryBS, 
         onSelectedCategory, 
         onCreateCategories, 
-        onUpdateCategories 
+        onUpdateCategories,
+        onPressAddCategory
     } = useCategoryViewController()
 
     useEffect(() => {
-        if(isFocused) fetchCategories()
-    }, [isFocused])
+        fetchCategories()
+    }, [])
 
     const HeaderView = () => {
         return(
@@ -55,14 +52,7 @@ export default function CategoryView(){
                     icon="plus"
                     iconColor={colors.neutral.neutral_10}
                     size={20}
-                    onPress={() => {
-                        if(categories.length < 8){
-                            doDisableEdit()
-                            onOpenCategoryBS()
-                        }else{
-                            ToastAndroid.show(t('description.max_category'), ToastAndroid.SHORT);
-                        }
-                    }}
+                    onPress={onPressAddCategory}
                 />
             </Stack>
         )
@@ -104,8 +94,10 @@ export default function CategoryView(){
                 }}
             />
             <HeaderView />
-            <ScrollView contentContainerStyle={{ paddingVertical: 8, flexGrow: 1 }}>
-                <Stack mb={12} mt={8} ml={16} mr={16}>
+            <ScrollView 
+                contentContainerStyle={{ paddingVertical: 8, flexGrow: 1 }}
+                refreshControl={<RefreshControl refreshing={false} onRefresh={fetchCategories}/>}>
+                <Stack mb={12} ml={16} mr={16}>
                     <Typography textStyle={{ textAlign: 'center', fontSize: 16, fontWeight: 700, color: colors.neutral.neutral_90 }}>{categories.length == 0 ? t('description.category') : t('description.max_category')}</Typography>
                     { categories.length > 0 ?
                     <Typography viewStyle={{ marginTop: 4 }} textStyle={{ textAlign: 'center', fontSize: 12, color: colors.neutral.neutral_70 }}>({ last30day } - {currentDate})</Typography> : null }

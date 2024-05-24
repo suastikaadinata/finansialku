@@ -62,7 +62,7 @@ export default function transactionViewModel(){
     const getTransactionByType = async(type) => {
         const userId = await AsyncStorage.getItem(Constants.USER_ID)
         return await database.get('transactions').
-            query(Q.where('user_id', userId), Q.where('type', type), Q.where('date', Q.between(last30day, currentDate)), Q.sortBy('date', Q.desc))
+            query(Q.where('user_id', userId), Q.where('type', type), Q.sortBy('date', Q.desc))
             .unsafeFetchRaw()
     }
 

@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { useBottomSheet } from "../provider/BottomSheetProvider";
 import userViewModel from "../view-model/userViewModel";
-import { UserItem } from "../model/User";
 
 export default function useEditAccountViewController(){
     const { t } = useTranslation();

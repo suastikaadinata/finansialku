@@ -16,7 +16,7 @@ import { NavigateProps } from "../model/GlobalProps";
 import Constants from "../data/Constants";
 import { TransactionItem } from "../model/Transaction";
 import { TransactionItemViewAnimated } from "../components/TransactionItemViewAnimated";
-import { useIsFocused } from "@react-navigation/native";
+import { RefreshControl } from "react-native";
 
 interface Props{
     isSelected?: boolean;
@@ -30,7 +30,6 @@ interface Props{
 
 export default function TransactionView({ navigation }: NavigateProps){
     const { t } = useTranslation();
-    const isFocused = useIsFocused();
     const { 
         selectedType, 
         selectedItem, 
@@ -40,12 +39,13 @@ export default function TransactionView({ navigation }: NavigateProps){
         doHandlingOnGoBack, 
         fetchCategories,
         onOpenDeleteConfirmation,
-        onGoAddTransactionPageHandling  
+        onGoAddTransactionPageHandling,
+        doRefreshing  
     } = useTransactionViewController();
 
     useEffect(() => {
-        if(isFocused) fetchCategories()
-    }, [isFocused])
+        fetchCategories()
+    }, [])
 
     const HeaderView = () => {
         return(
@@ -139,7 +139,9 @@ export default function TransactionView({ navigation }: NavigateProps){
     return(
         <Page bgColor={colors.neutral.neutral_20}>
             <HeaderView />
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView 
+                contentContainerStyle={{ flexGrow: 1 }}
+                refreshControl={<RefreshControl refreshing={false} onRefresh={doRefreshing}/>}>
                 <IncomeSpendingTypeView />
                 <LatestTransactionView />
             </ScrollView>

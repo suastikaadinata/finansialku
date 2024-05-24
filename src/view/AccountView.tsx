@@ -5,7 +5,7 @@
 
 import React, { useEffect } from 'react';
 import Page from '../components/Page';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native';
 import { IconButton, Surface } from 'react-native-paper';
 import { colors } from '../styles/colors';
 import Stack from '../components/Stack';
@@ -34,7 +34,7 @@ export default function AccountView({ navigation }: NavigateProps){
     const { 
         userDetail, 
         onOpenLanguageBS, 
-        fetchUserDetail 
+        fetchUserDetail,
     } = useAccountViewController();
 
     useEffect(() => { 
@@ -114,7 +114,9 @@ export default function AccountView({ navigation }: NavigateProps){
 
     return(
         <Page>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView 
+                contentContainerStyle={{ flexGrow: 1 }}
+                refreshControl={<RefreshControl refreshing={false} onRefresh={fetchUserDetail}/>}>
                 <AccountInformationView />
                 <SettingView />
                 <LogoutView />

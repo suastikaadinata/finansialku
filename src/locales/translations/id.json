@@ -93,6 +93,21 @@
         "english": "English",
         "indonesian": "Bahasa"
     },
+    "error": {
+        "title": {
+            "username_or_password_incorrect": "Nama pengguna atau kata sandi salah",
+            "username_has_been_taken": "Nama pengguna sudah digunakan",
+            "old_password_incorrect": "Kata sandi lama salah",
+            "internal_server_error": "Error 500",
+            "password_confirmation": "Konfirmasi kata sandi harus sama dengan kata sandi baru" 
+        },
+        "description": {
+            "username_or_password_incorrect": "Nama pengguna atau kata sandi yang kamu masukkan salah. Mohon periksa kembali nama pengguna dan kata sandi yang kamu masukkan.",
+            "username_has_been_taken": "Nama pengguna yang kamu masukkan sudah digunakan. Mohon gunakan nama pengguna lain.",
+            "old_password_incorrect": "Kata sandi lama yang kamu masukkan salah. Mohon periksa kembali kata sandi lama yang kamu masukkan.",
+            "internal_server_error": "Terjadi kesalahan pada server. Mohon coba beberapa saat lagi."
+        }
+    },
     "forgot_password": "Lupa kata sandi ?",
     "tap_here": "Tekan disini.",
     "your_balance_this_month_is": "Saldo kamu saat ini adalah",

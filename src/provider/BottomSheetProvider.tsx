@@ -101,7 +101,7 @@ export const BottomSheetProvider = ({ children }: { children: React.ReactNode })
             title: (props.errorCode && props.errorCode == 500) ? t("error.title.internal_server_error") : props.title,
             description: (props.errorCode && props.errorCode == 500) ? t("error.description.internal_server_error") : props.description,
             color: 'error',
-            height: 200,
+            height: props.height ? props.height : 200,
             type: Constants.BOTTOM_SHEET.ALERT, 
             btnTitle: t("title.close"),
             onSubmit: () => hideAlertBS(),

@@ -3,12 +3,15 @@
  * Copyright (c) 2024 - Made with love
  */
 
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import categoriesViewModel from "../view-model/categoriesViewModel";
 import { CategoryItem } from "../model/Category";
 import moment from "moment";
+import { ToastAndroid } from "react-native";
+import { useTranslation } from "react-i18next";
 
 export default function useCategoryViewController(){
+    const { t } = useTranslation();
     const { doCreateCategories, doUpdateCategories, getCategoryByTransactionAmountAndBudget } = categoriesViewModel();
     const [categories, setCategories] = useState<CategoryItem[]>([])
     const [isEdit, setIsEdit] = useState(false)
@@ -36,11 +39,11 @@ export default function useCategoryViewController(){
         setIsEdit(false)
     }
 
-    const onSelectedCategory = (category: CategoryItem) => {
+    const onSelectedCategory = useCallback((category: CategoryItem) => {
         setSelectedCategory(category)
         setIsEdit(true)
         onOpenCategoryBS()
-    }
+    }, [selectedCategory, setIsEdit])
 
     const onUpdateCategories = async(name: string, budget: number) => {
         await doUpdateCategories(selectedCategory.id, name, budget, () => {
@@ -56,6 +59,15 @@ export default function useCategoryViewController(){
         console.log("cat", data)
         setCategories(data)
     }
+
+    const onPressAddCategory = () => {
+        if(categories.length < 8){
+            doDisableEdit()
+            onOpenCategoryBS()
+        }else{
+            ToastAndroid.show(t('description.max_category'), ToastAndroid.SHORT);
+        }
+    }
     
     return{
         categories,
@@ -70,6 +82,7 @@ export default function useCategoryViewController(){
         onCreateCategories,
         fetchCategories,
         doCreateCategories,
-        onUpdateCategories
+        onUpdateCategories,
+        onPressAddCategory
     }
 }

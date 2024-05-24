@@ -58,6 +58,7 @@ export const CategoryBottomSheet = forwardRef(({ isAdd, isEdit, initialData, onS
             name: data.name,
             budget: data.budget
         })
+        method.reset()
     }
     
     return(

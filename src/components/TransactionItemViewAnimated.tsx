@@ -15,6 +15,7 @@ import { colors } from "../styles/colors";
 import moment from "moment";
 import { currencyFormat } from "../utils/Utilities";
 import { Easing } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface Props{
     onPress?: () => void;
@@ -27,11 +28,12 @@ interface Props{
 }
 
 export const TransactionItemViewAnimated = memo(({ isIncome, isLast, transaction, isSelectedID, onPress, onDelete, onEdit }: Props) => {
+    const { t } = useTranslation();
     let animatedHeight = new Animated.Value(0)
 
     useEffect(() => {
         Animated.timing(animatedHeight, {
-            toValue: isSelectedID != transaction?.id ? 0 : 300,
+            toValue: isSelectedID != transaction?.id ? 0 : 500,
             duration: 300,
             easing: Easing.linear, 
             useNativeDriver: false
@@ -51,6 +53,10 @@ export const TransactionItemViewAnimated = memo(({ isIncome, isLast, transaction
                 <Typography viewStyle={{ alignSelf: 'center' }} textStyle={{ fontSize: 16, fontWeight: 700, color: isIncome ? colors.success.main : colors.danger.main  }}>{isIncome ? "+": "-"} {currencyFormat(transaction?.amount)}</Typography>
             </Stack>
             <Animated.View style={{ maxHeight: animatedHeight }}>
+                <Stack mt={12}>
+                    <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_90 }}>{t("title.description")}:</Typography>
+                    <Typography textStyle={{ fontSize: 12, color: colors.neutral.neutral_70 }}>{transaction?.description ?? "-"}</Typography>
+                </Stack>
                 <Stack direction="row" pt={12}>
                     <Stack mr={8} style={{ flex: 1 }}>
                         <CustomButton icon={

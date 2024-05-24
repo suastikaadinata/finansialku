@@ -11,13 +11,17 @@ import Constants from "../data/Constants";
 import moment from "moment";
 import { colors } from "../styles/colors";
 import { useTranslation } from "react-i18next";
+import { ToastAndroid } from "react-native";
+import { currencyFormat } from "../utils/Utilities";
 
 export default function useInsightViewController(){
     const { t } = useTranslation()
     const { getTransactionSumByCategory, getSumTransctionLastSixMonthWithType } = transactionViewModel()
-    const [incomePieData, setIncomePieData] = useState<GraphData>()
-    const [spendingPieData, setSpendingPieData] = useState<GraphData>()
-    const [monthlyComparionData, setMonthlyComparionData] = useState<any[]>([])
+    const [chartData, setChartData] = useState({
+        incomePieData: { totalMoney: 0, chartData: [] } as GraphData,
+        spendingPieData: { totalMoney: 0, chartData: [] } as GraphData,
+        monthlyComparionData: [] as any[]
+    })
 
     const doGetTransactionByType = async(type: string, onSuccess: (data: GraphData) => void) => {
         await getTransactionSumByCategory(type).then((data: any) => {
@@ -33,17 +37,21 @@ export default function useInsightViewController(){
     }
 
     const fetchAllData = async() => {
+        let incomeData = {} as GraphData
+        let spendingData = {} as GraphData
+        let monthlyComparisonData: any[] = []
+
         await doGetTransactionByType(Constants.TRANSACTION.INCOME, (data) => {
-            setIncomePieData(data)
+            incomeData = data
         })
         await doGetTransactionByType(Constants.TRANSACTION.SPENDING, (data) => {
-            setSpendingPieData(data)
+            spendingData = data
         })
         await getSumTransctionLastSixMonthWithType().then((data) => {
             console.log('monthly comparison data', data)
-            let chartData: any[] = []
+            let monthlyData: any[] = []
             data.map((item) => {
-                chartData.push({
+                monthlyData.push({
                     value: item.total_income,
                     label: moment(item.month).format("MMM YYYY"),
                     monthYear: moment(item.month).format("MMM YYYY"),
@@ -53,22 +61,35 @@ export default function useInsightViewController(){
                     labelTextStyle: {color: colors.neutral.neutral_70},
                     frontColor: colors.primary.main
                 })
-                chartData.push({
+                monthlyData.push({
                     value: item.total_spending, 
                     type: t("transaction.spending"),
                     monthYear: moment(item.month).format("MMM YYYY"),
                     frontColor: colors.danger.main,
                 })
             })
-            setMonthlyComparionData(chartData)
+            monthlyComparisonData = monthlyData
+        })
+
+        setChartData({
+            incomePieData: incomeData,
+            spendingPieData: spendingData,
+            monthlyComparionData: monthlyComparisonData
         })
     }
 
+    const onPressBarChart = (item: any) => {
+        ToastAndroid.show(`${item.type} ${item.monthYear}: ${currencyFormat(item.value)}`, ToastAndroid.SHORT)
+    }
+
+    const onPressPieChart = (item: any) => {
+        ToastAndroid.show(`${item.title}: ${currencyFormat(item.value)}`, ToastAndroid.SHORT)
+    }
 
     return{
-        incomePieData,
-        spendingPieData,
-        monthlyComparionData,
-        fetchAllData
+        chartData,
+        fetchAllData,
+        onPressBarChart,
+        onPressPieChart
     }
 }

@@ -6,12 +6,12 @@
 import { colors } from "../styles/colors";
 
 export const graphColor = [
-    colors.primary.main, 
-    colors.secondary.main, 
-    '#B33771', 
-    colors.success.main, 
-    "#F97F51",
-    colors.neutral.neutral_90,
-    '#8e44ad',
-    "#aaa69d"
+    colors.graph.blue, 
+    colors.graph.yellow, 
+    colors.graph.red, 
+    colors.graph.green, 
+    colors.graph.orange,
+    colors.graph.black,
+    colors.graph.purple,
+    colors.graph.gray
 ]

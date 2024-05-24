@@ -12,6 +12,7 @@ export interface TransactionItem {
     name: string;
     date: string;
     type: string;
+    description?: string;
     id?: string;
     user_id?: string;
 }
