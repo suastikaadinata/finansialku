@@ -18,7 +18,7 @@ export default function useEditPasswordViewController() {
     const schema = yup.object({
         oldPassword: yup.string().min(8).required().label(t('title.old_password')),
 		newPassword: yup.string().min(8).required().label(t('title.new_password')),
-        newPasswordConfirmation: yup.string().min(8).oneOf([yup.ref('newPassword'),undefined], t('error.title.password_confirmation')).required().label(t('title.new_password_confirmation')),
+        newPasswordConfirmation: yup.string().min(8).oneOf([yup.ref('newPassword'),undefined], t('error.title.password_confirmation', { password: t('title.new_password') })).required().label(t('title.new_password_confirmation')),
 	}).required();
 	
 	const defaultValues = {

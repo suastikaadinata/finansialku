@@ -99,7 +99,7 @@
             "username_has_been_taken": "Username has been taken",
             "old_password_incorrect": "Old password incorrect",
             "internal_server_error": "Error 500",
-            "password_confirmation": "Passwords Confirmation must match with New Password" 
+            "password_confirmation": "Passwords Confirmation must match with {{password}}" 
         },
         "description": {
             "username_or_password_incorrect": "The username or password you entered is incorrect. Please check your username and password again.",

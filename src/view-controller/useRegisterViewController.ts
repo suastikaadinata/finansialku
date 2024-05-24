@@ -25,7 +25,7 @@ export default function useRegisterViewController() {
     const [isOpenBirtdatePicker, setIsOpenBirtdatePicker] = useState(false);
     const [gender, setSelectedGender] = useState<SelectItem>({} as SelectItem)
     const genderData: SelectItem[] = [
-        { id: Constants.GENDER.MALE, name: t("gender.male") },
+        { id: Constants.GENDER.MALE, name: t("gender.male")},
         { id: Constants.GENDER.FEMALE, name: t("gender.female")}
     ]
 
@@ -35,7 +35,7 @@ export default function useRegisterViewController() {
         birthdate: yup.string().required().label(t('title.birthdate')),
         gender: yup.string().required().label(t('title.gender')),
 		password: yup.string().min(8).required().label(t('title.password')),
-        passwordConfirmation: yup.string().min(8).oneOf([yup.ref('password'),undefined], 'Passwords must match').required().label(t('title.password_confirmation')),
+        passwordConfirmation: yup.string().min(8).oneOf([yup.ref('password'),undefined], t('error.title.password_confirmation', { password: t('title.password') })).required().label(t('title.password_confirmation')),
 	}).required();
 	
 	const defaultValues = {
